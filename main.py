@@ -1,19 +1,28 @@
 from api.world import World
 from api.direction import Direction
-import keyboard
+from api.exception.engame import EndGameException
 
 world = World()
 snake = world.create_snake()
 
 while True:
-    if keyboard.read_key() == 'q':
+    world.render()
+
+    key = input("Move (W/A/S/D) : ").lower()
+
+    if key == 'q':
         print('Quitting the program')
         break
-    if keyboard.read_key() == 'w':
-        snake.move(Direction.NORTH)
-    elif keyboard.read_key() == 's':
-        snake.move(Direction.SUD)
-    elif keyboard.read_key() == 'a':
-        snake.move(Direction.WEAST)
-    elif keyboard.read_key() == 'd':
-        snake.move(Direction.EAST)
+
+    try:
+        if key == 'w':
+            snake.move(Direction.NORTH)
+        elif key == 's':
+            snake.move(Direction.SUD)
+        elif key == 'a':
+            snake.move(Direction.WEAST)
+        elif key == 'd':
+            snake.move(Direction.EAST)
+    except EndGameException:
+        print("Good bye !")
+        break

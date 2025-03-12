@@ -1,6 +1,8 @@
-from snake import Snake
-from map_location import MapLocation
+from api.map_location import MapLocation
+from api.snake import Snake
+from api.direction import Direction
 import sys
+import copy
 
 class World:
     def __init__(self, heigth=10, width=10):
@@ -32,7 +34,7 @@ class World:
         return MapLocation(x, y, self.__world[y][x] == ' ')
     
     def create_snake(self) -> Snake:
-        snake = Snake(self, 2, 2)
+        snake = Snake(self, 5, 5, Direction.SUD)
 
         self.__entities.append(snake)
 
@@ -42,12 +44,15 @@ class World:
         sys.stdout.write("\033[H")
         sys.stdout.write("\033[J")
 
-        world = self.__world
+        world = copy.deepcopy(self.__world)
 
-        for i, entity in enumerate(self.__entities):
+        for _, entity in enumerate(self.__entities):
             world[entity.get_y()][entity.get_x()] = '#'
 
-        for i, line in enumerate(world):
+            for _, body in enumerate(entity.get_body()):
+                world[body.get_y()][body.get_x()] = 'T'
+
+        for _, line in enumerate(world):
             print("".join(line))
 
         sys.stdout.flush()
