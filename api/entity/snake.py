@@ -1,6 +1,7 @@
 from api.direction import Direction
 from api.exception.gameover import GameOver
 from api.entity.apple import Apple
+from api.world import World
 
 
 class SnakeBody:
@@ -20,7 +21,7 @@ class SnakeBody:
 
 
 class Snake:
-    def __init__(self, world, x: int, y: int, direction: Direction):
+    def __init__(self, world: World, x: int, y: int, direction: Direction):
         self.__x = x
         self.__y = y
         self.__body: list[SnakeBody] = []
@@ -30,12 +31,14 @@ class Snake:
         dir_x, dir_y = direction.value
 
         for i in range(3):
+            x += dir_x
+            y += dir_y
+
             self.__body.append(
-                SnakeBody(
-                    x + dir_x + i if dir_x != 0 else x,
-                    y + dir_y + i if dir_y != 0 else y
-                )
+                SnakeBody(x, y)
             )
+
+            self.__world.spaw_entity(self.__body[-1])
 
     def move(self, direction: Direction):
         x, y = direction.value
@@ -68,10 +71,13 @@ class Snake:
                 )
             )
         else:
-            del self.__body[-1]
-
             if len(self.__body) == 0:
                 raise GameOver("End game")
+
+            del self.__body[-1]
+
+    def size(self):
+        return len(self.__body) + 1
 
     def get_x(self) -> int:
         return self.__x

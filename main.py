@@ -1,9 +1,12 @@
 from api.world import World
 from api.direction import Direction
-from api.exception.gameover import EndGameException
+from api.exception.gameover import GameOver
+from api.entity.snake import Snake
 
 world = World()
-snake = world.create_snake()
+snake = Snake(world, 5, 5, Direction.SUD)
+
+world.spaw_entity(snake)
 
 while True:
     world.render()
@@ -23,6 +26,6 @@ while True:
             snake.move(Direction.WEAST)
         elif key == 'd':
             snake.move(Direction.EAST)
-    except EndGameException:
+    except GameOver:
         print("Good bye !")
         break

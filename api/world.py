@@ -1,6 +1,4 @@
 from api.map_location import MapLocation
-from api.entity.snake import Snake
-from api.direction import Direction
 import sys
 import copy
 
@@ -10,7 +8,7 @@ class World:
         self.__world: list = []
         self.__heigth: int = heigth
         self.__width: int = width
-        self.__entities: list[Snake] = []
+        self.__entities: list = []
 
         self.__make_world()
 
@@ -28,18 +26,23 @@ class World:
             ceil.append('*')
             self.__world.append(ceil)
 
-    def get_location(self, x: int, y: int):
+    def get_location(self, x: int, y: int) -> MapLocation:
         if y > len(self.__world) or x > len(self.__world[y]):
-            raise Exception('Invalid y')  # TODO: Write exception message
+            raise Exception('Invalid location')
 
-        return MapLocation(x, y, self.__world[y][x] == ' ')
+        if self.get_entity_at(x, y) is None:
+            return MapLocation(x, y, self.__world[y][x] == ' ')
 
-    def create_snake(self) -> Snake:
-        snake = Snake(self, 5, 5, Direction.SUD)
+        return MapLocation(x, y, False)
 
-        self.__entities.append(snake)
+    def get_entity_at(self, x: int, y: int):
+        for entity in self.__entities:
+            if entity.get_x() == x and entity.get_y() == y:
+                return entity
+        return None
 
-        return snake
+    def spaw_entity(self, entity) -> None:
+        self.__entities.append(entity)
 
     def render(self):
         sys.stdout.write("\033[H")
@@ -50,8 +53,8 @@ class World:
         for _, entity in enumerate(self.__entities):
             world[entity.get_y()][entity.get_x()] = '#'
 
-            for _, body in enumerate(entity.get_body()):
-                world[body.get_y()][body.get_x()] = 'T'
+            # for _, body in enumerate(entity.get_body()):
+            #     world[body.get_y()][body.get_x()] = 'T'
 
         for _, line in enumerate(world):
             print("".join(line))
