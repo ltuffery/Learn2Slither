@@ -1,4 +1,5 @@
 from api.map_location import MapLocation
+from api.entity.entity import Entity
 import sys
 import copy
 
@@ -25,7 +26,7 @@ class World:
         self.__world: list = []
         self.__height: int = height
         self.__width: int = width
-        self.__entities: list = []
+        self.__entities: list[Entity] = []
 
         self.__make_world()
 
@@ -104,7 +105,7 @@ class World:
         world = copy.deepcopy(self.__world)
 
         for entity in self.__entities:
-            world[entity.get_y()][entity.get_x()] = '#'
+            world[entity.get_y()][entity.get_x()] = entity.get_char()
 
             # Uncomment if you want to render the snake's body
             # for body in entity.get_body():

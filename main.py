@@ -2,11 +2,14 @@ from api.world import World
 from api.direction import Direction
 from api.exception.gameover import GameOver
 from api.entity.snake import Snake
+from api.entity.apple import Apple, AppleType
 
 world = World()
-snake = Snake(world, 5, 5, Direction.SUD)
+snake = Snake(world, 5, 5, Direction.SOUTH)
+green_apple = Apple(2, 2, AppleType.GREEN)
 
-world.spaw_entity(snake)
+world.spawn_entity(snake)
+world.spawn_entity(green_apple)
 
 while True:
     world.render()
@@ -21,9 +24,9 @@ while True:
         if key == 'w':
             snake.move(Direction.NORTH)
         elif key == 's':
-            snake.move(Direction.SUD)
+            snake.move(Direction.SOUTH)
         elif key == 'a':
-            snake.move(Direction.WEAST)
+            snake.move(Direction.WEST)
         elif key == 'd':
             snake.move(Direction.EAST)
     except GameOver:
