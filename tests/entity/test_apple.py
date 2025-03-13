@@ -1,6 +1,7 @@
 import unittest
 from api.entity.apple import Apple, AppleType
 
+
 class TestApple(unittest.TestCase):
     def test_is_green_type(self):
         apple = Apple(AppleType.GREEN)
@@ -13,6 +14,7 @@ class TestApple(unittest.TestCase):
 
         self.assertFalse(apple.is_green())
         self.assertTrue(apple.is_red())
+
 
 if __name__ == '__main__':
     unittest.main()

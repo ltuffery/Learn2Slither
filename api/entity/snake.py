@@ -61,7 +61,12 @@ class Snake:
             x, y = self.__last_direction
             last_body = self.__body[-1]
 
-            self.__body.append(SnakeBody(last_body.get_x() + x, last_body.get_y() + y))
+            self.__body.append(
+                SnakeBody(
+                    last_body.get_x() + x,
+                    last_body.get_y() + y
+                )
+            )
         else:
             del self.__body[-1]
 
