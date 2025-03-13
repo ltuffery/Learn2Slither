@@ -2,17 +2,33 @@ from enum import Enum
 
 
 class Direction(Enum):
-    NORTH = (0, -1)
-    SUD = (0, 1)
-    EAST = (1, 0)
-    WEAST = (-1, 0)
+    """
+    Represents the possible movement directions in the game.
 
-    def opposite(self):
+    Attributes:
+        NORTH (tuple[int, int]): Moves upward (0, -1).
+        SOUTH (tuple[int, int]): Moves downward (0, 1).
+        EAST (tuple[int, int]): Moves right (1, 0).
+        WEST (tuple[int, int]): Moves left (-1, 0).
+    """
+
+    NORTH = (0, -1)
+    SOUTH = (0, 1)
+    EAST = (1, 0)
+    WEST = (-1, 0)
+
+    def opposite(self) -> "Direction":
+        """
+        Returns the opposite direction.
+
+        Returns:
+            Direction: The opposite movement direction.
+        """
         if self == Direction.NORTH:
-            return Direction.SUD
-        elif self == Direction.SUD:
+            return Direction.SOUTH
+        elif self == Direction.SOUTH:
             return Direction.NORTH
         elif self == Direction.EAST:
-            return Direction.WEAST
+            return Direction.WEST
         else:
             return Direction.EAST
