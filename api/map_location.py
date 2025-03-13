@@ -6,10 +6,9 @@ class MapLocation:
 
     def is_passable(self) -> bool:
         return self.__is_passable
-    
+
     def get_x(self) -> int:
         return self.__x
-    
+
     def get_y(self) -> int:
         return self.__y
-        

@@ -4,6 +4,7 @@ from api.direction import Direction
 import sys
 import copy
 
+
 class World:
     def __init__(self, heigth=10, width=10):
         self.__world: list = []
@@ -12,7 +13,7 @@ class World:
         self.__entities: list[Snake] = []
 
         self.__make_world()
-    
+
     def __make_world(self) -> None:
         for i in range(self.__heigth + 2):
             if i == 0 or i == self.__heigth + 1:
@@ -29,10 +30,10 @@ class World:
 
     def get_location(self, x: int, y: int):
         if y > len(self.__world) or x > len(self.__world[y]):
-            raise Exception('Invalid y') # TODO: Write exception message
-        
+            raise Exception('Invalid y')  # TODO: Write exception message
+
         return MapLocation(x, y, self.__world[y][x] == ' ')
-    
+
     def create_snake(self) -> Snake:
         snake = Snake(self, 5, 5, Direction.SUD)
 
@@ -56,4 +57,3 @@ class World:
             print("".join(line))
 
         sys.stdout.flush()
-            

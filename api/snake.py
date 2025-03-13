@@ -1,6 +1,6 @@
 from api.direction import Direction
 from api.exception.engame import EndGameException
-import copy
+
 
 class SnakeBody:
     def __init__(self, x: int, y: int):
@@ -12,10 +12,11 @@ class SnakeBody:
 
     def get_y(self) -> int:
         return self.__y
-    
+
     def move(self, x: int, y: int):
         self.__x = x
         self.__y = y
+
 
 class Snake:
     def __init__(self, world, x: int, y: int, direction: Direction):
@@ -24,14 +25,16 @@ class Snake:
         self.__body: list[SnakeBody] = []
         self.__world = world
 
+        dir_x, dir_y = direction.value
+
         for i in range(3):
             self.__body.append(
                 SnakeBody(
-                    x + direction.value[0] + i if direction.value[0] != 0 else x,
-                    y + direction.value[1] + i if direction.value[1] != 0 else y
+                    x + dir_x + i if dir_x != 0 else x,
+                    y + dir_y + i if dir_y != 0 else y
                 )
             )
-    
+
     def move(self, direction: Direction):
         x, y = direction.value
         info = self.__world.get_location(self.__x + x, self.__y + y)
@@ -55,6 +58,6 @@ class Snake:
 
     def get_y(self) -> int:
         return self.__y
-    
+
     def get_body(self) -> list[SnakeBody]:
         return self.__body

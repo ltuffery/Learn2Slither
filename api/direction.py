@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Direction(Enum):
     NORTH = (0, -1)
     SUD = (0, 1)
