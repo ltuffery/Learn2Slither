@@ -77,7 +77,8 @@ class World:
             y (int): The Y-coordinate.
 
         Returns:
-            object | None: The entity found at the coordinates, or None if empty.
+            object | None: The entity found at the coordinates, or None if
+            empty.
         """
         for entity in self.__entities:
             if entity.get_x() == x and entity.get_y() == y:

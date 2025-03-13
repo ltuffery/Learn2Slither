@@ -56,19 +56,22 @@ class SnakeBody:
 
 class Snake:
     """
-    Represents a snake in the game, which moves, grows, and interacts with the world.
+    Represents a snake in the game, which moves, grows, and interacts with the
+    world.
 
     Attributes:
         __x (int): The X-coordinate of the snake's head.
         __y (int): The Y-coordinate of the snake's head.
-        __body (list[SnakeBody]): A list representing the snake's body segments.
+        __body (list[SnakeBody]): A list representing the snake's body
+        segments.
         __world (World): The game world where the snake exists.
         __last_direction (Direction): The last movement direction of the snake.
     """
 
     def __init__(self, world: World, x: int, y: int, direction: Direction):
         """
-        Initializes a snake in the given world at a specific position and direction.
+        Initializes a snake in the given world at a specific position and
+        direction.
 
         Args:
             world (World): The game world where the snake exists.
@@ -94,10 +97,12 @@ class Snake:
 
     def move(self, direction: Direction):
         """
-        Moves the snake in the given direction. If the new location is not passable, the game ends.
+        Moves the snake in the given direction. If the new location is not
+        passable, the game ends.
 
         Args:
-            direction (Direction): The direction in which the snake should move.
+            direction (Direction): The direction in which the snake should
+            move.
 
         Raises:
             GameOver: If the snake collides with an obstacle or itself.
@@ -122,7 +127,8 @@ class Snake:
 
     def eat(self, apple: Apple):
         """
-        Handles the snake eating an apple. The snake grows if the apple is green, 
+        Handles the snake eating an apple. The snake grows if the apple is
+        green,
         otherwise, it loses a segment.
 
         Args:
@@ -149,7 +155,8 @@ class Snake:
 
     def size(self) -> int:
         """
-        Returns the total size of the snake, including the head and body segments.
+        Returns the total size of the snake, including the head and body
+        segments.
 
         Returns:
             int: The total number of segments in the snake.
