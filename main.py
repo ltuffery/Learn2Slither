@@ -1,6 +1,6 @@
 from api.world import World
 from api.direction import Direction
-from api.exception.engame import EndGameException
+from api.exception.gameover import EndGameException
 
 world = World()
 snake = world.create_snake()

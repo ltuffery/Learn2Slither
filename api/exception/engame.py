@@ -1,2 +1,0 @@
-class EndGameException(Exception):
-    pass

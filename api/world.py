@@ -1,5 +1,5 @@
 from api.map_location import MapLocation
-from api.snake import Snake
+from api.entity.snake import Snake
 from api.direction import Direction
 import sys
 import copy
