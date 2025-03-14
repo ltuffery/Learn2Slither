@@ -1,5 +1,6 @@
 from enum import Enum
 from api.entity.entity import Entity
+from api.world import World
 
 
 class AppleType(Enum):
@@ -22,7 +23,7 @@ class Apple(Entity):
         apple_type (AppleType): The type of the apple (RED or GREEN).
     """
 
-    def __init__(self, x: int, y: int, apple_type: AppleType):
+    def __init__(self, world: World, x: int, y: int, apple_type: AppleType):
         """
         Initializes an apple with a specified type and position.
 
@@ -32,7 +33,9 @@ class Apple(Entity):
             apple_type (AppleType): The type of the apple (RED or GREEN).
         """
         super().__init__(x, y)
-        self.apple_type = apple_type
+
+        self.__world = world
+        self.__apple_type = apple_type
 
     def is_green(self) -> bool:
         """
@@ -41,7 +44,7 @@ class Apple(Entity):
         Returns:
             bool: True if the apple is green, False otherwise.
         """
-        return self.apple_type == AppleType.GREEN
+        return self.__apple_type == AppleType.GREEN
 
     def is_red(self) -> bool:
         """
@@ -50,7 +53,7 @@ class Apple(Entity):
         Returns:
             bool: True if the apple is red, False otherwise.
         """
-        return self.apple_type == AppleType.RED
+        return self.__apple_type == AppleType.RED
 
     def get_char(self) -> str:
         """
@@ -65,3 +68,7 @@ class Apple(Entity):
             return "\033[32m@\033[0m"  # Green apple
 
         return "\033[31m@\033[0m"  # Red apple
+    
+    def consume(self):
+        self.__world.remove_entity(self)
+        self.__world.spawn_entity(self)

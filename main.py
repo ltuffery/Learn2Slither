@@ -6,7 +6,7 @@ from api.entity.apple import Apple, AppleType
 
 world = World()
 snake = Snake(world, 5, 5, Direction.SOUTH)
-green_apple = Apple(2, 2, AppleType.GREEN)
+green_apple = Apple(world, 2, 2, AppleType.GREEN)
 
 world.spawn_entity(snake)
 world.spawn_entity(green_apple)

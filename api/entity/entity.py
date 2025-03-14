@@ -65,6 +65,10 @@ class Entity(ABC):
             y (int): The new Y-coordinate.
         """
         self.__y = y
+    
+    def teleport(self, x: int, y: int) -> None:
+        self.__x = x
+        self.__y = y
 
     @abstractmethod
     def get_char(self) -> str:

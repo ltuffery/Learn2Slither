@@ -3,6 +3,7 @@ from api.exception.gameover import GameOver
 from api.entity.apple import Apple
 from api.world import World
 from api.entity.entity import Entity
+import random
 
 
 class Snake(Entity):
@@ -43,6 +44,20 @@ class Snake(Entity):
             x += dir_x
             y += dir_y
             self.__body.append((x, y))
+    
+    def teleport(self, x, y):
+        super().teleport(x, y)
+
+        for i in range(len(self.__body)):
+            del self.__body[i]
+
+            self.__last_direction = random.choice([ x for x in list(Direction) if x.name != self.__last_direction.name ])
+            dir_x, dir_y = self.__last_direction.value
+
+            x += dir_x
+            y += dir_y
+
+            self.__body.insert(i, (x, y))
 
     def move(self, direction: Direction):
         """
@@ -99,6 +114,8 @@ class Snake(Entity):
 
             # Remove the last body segment
             del self.__body[-1]
+        
+        apple.consume()
 
     def size(self) -> int:
         """
