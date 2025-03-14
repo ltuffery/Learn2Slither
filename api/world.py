@@ -12,7 +12,7 @@ class World:
         __world (list[list[str]]): The 2D grid representing the game map.
         __height (int): The height of the world (number of rows).
         __width (int): The width of the world (number of columns).
-        __entities (list): A list of all entities present in the world.
+        __entities (list[Entity]): A list of all entities present in the world.
     """
 
     def __init__(self, height=10, width=10):
@@ -64,12 +64,11 @@ class World:
         if y > len(self.__world) or x > len(self.__world[y]):
             raise Exception('Invalid location')
 
-        if self.get_entity_at(x, y) is None:
-            return MapLocation(x, y, self.__world[y][x] == ' ')
+        is_wall = self.__world[y][x] == '*'
 
-        return MapLocation(x, y, False)
+        return MapLocation(x, y, is_wall, self.get_entity_at(x, y))
 
-    def get_entity_at(self, x: int, y: int):
+    def get_entity_at(self, x: int, y: int) -> Entity | None:
         """
         Retrieves an entity at the given coordinates.
 
@@ -79,7 +78,7 @@ class World:
 
         Returns:
             object | None: The entity found at the coordinates, or None if
-            empty.
+                empty.
         """
         for entity in self.__entities:
             if entity.get_x() == x and entity.get_y() == y:
@@ -105,11 +104,8 @@ class World:
         world = copy.deepcopy(self.__world)
 
         for entity in self.__entities:
-            world[entity.get_y()][entity.get_x()] = entity.get_char()
-
-            # Uncomment if you want to render the snake's body
-            # for body in entity.get_body():
-            #     world[body.get_y()][body.get_x()] = 'T'
+            for position in entity.render():
+                world[position[2]][position[1]] = position[0]
 
         for line in world:
             print("".join(line))
