@@ -65,8 +65,15 @@ class Entity(ABC):
             y (int): The new Y-coordinate.
         """
         self.__y = y
-    
+
     def teleport(self, x: int, y: int) -> None:
+        """
+        Teleports the entity to a new position (x, y).
+
+        Args:
+            x (int): The new X-coordinate.
+            y (int): The new Y-coordinate.
+        """
         self.__x = x
         self.__y = y
 

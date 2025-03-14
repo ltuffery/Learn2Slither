@@ -68,8 +68,15 @@ class World:
         is_wall = self.__world[y][x] == '*'
 
         return MapLocation(x, y, is_wall, self.get_entity_at(x, y))
-    
+
     def get_empty_locations(self) -> list[tuple[int, int]]:
+        """
+        Retrieves a list of all empty locations in the world.
+
+        Returns:
+            list[tuple[int, int]]: A list of coordinates (x, y) where there
+            are no entities.
+        """
         empty_list = []
 
         for y in range(len(self.__world)):
@@ -94,7 +101,7 @@ class World:
 
         Returns:
             object | None: The entity found at the coordinates, or None if
-                empty.
+            empty.
         """
         for entity in self.__entities:
             if entity.get_x() == x and entity.get_y() == y:
@@ -115,6 +122,12 @@ class World:
         self.__entities.append(entity)
 
     def remove_entity(self, entity: Entity):
+        """
+        Removes an entity from the world.
+
+        Args:
+            entity (Entity): The entity to remove.
+        """
         self.__entities.remove(entity)
 
     def render(self):

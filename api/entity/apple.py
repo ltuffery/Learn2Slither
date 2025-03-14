@@ -57,8 +57,8 @@ class Apple(Entity):
 
     def get_char(self) -> str:
         """
-        Returns a character representation of the apple, colored based on its
-        type.
+        Returns a character representation of the apple, colored based on
+        its type.
 
         Returns:
             str: A string representing the apple with appropriate color
@@ -68,7 +68,13 @@ class Apple(Entity):
             return "\033[32m@\033[0m"  # Green apple
 
         return "\033[31m@\033[0m"  # Red apple
-    
+
     def consume(self):
+        """
+        Removes the apple from the world and respawns it.
+
+        The apple is removed from the world and then spawned again at the
+        same location.
+        """
         self.__world.remove_entity(self)
         self.__world.spawn_entity(self)
