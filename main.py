@@ -7,9 +7,11 @@ from api.entity.apple import Apple, AppleType
 world = World()
 snake = Snake(world, 5, 5, Direction.SOUTH)
 green_apple = Apple(world, 2, 2, AppleType.GREEN)
+red_apple = Apple(world, 2, 2, AppleType.RED)
 
 world.spawn_entity(snake)
 world.spawn_entity(green_apple)
+world.spawn_entity(red_apple)
 
 while True:
     world.render()
