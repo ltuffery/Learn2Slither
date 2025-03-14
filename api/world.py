@@ -2,6 +2,7 @@ from api.map_location import MapLocation
 from api.entity.entity import Entity
 import sys
 import copy
+import random
 
 
 class World:
@@ -23,7 +24,7 @@ class World:
             height (int, optional): The height of the world. Defaults to 10.
             width (int, optional): The width of the world. Defaults to 10.
         """
-        self.__world: list = []
+        self.__world: list[list[str]] = []
         self.__height: int = height
         self.__width: int = width
         self.__entities: list[Entity] = []
@@ -68,6 +69,28 @@ class World:
 
         return MapLocation(x, y, is_wall, self.get_entity_at(x, y))
 
+    def get_empty_locations(self) -> list[tuple[int, int]]:
+        """
+        Retrieves a list of all empty locations in the world.
+
+        Returns:
+            list[tuple[int, int]]: A list of coordinates (x, y) where there
+            are no entities.
+        """
+        empty_list = []
+
+        for y in range(len(self.__world)):
+            for x in range(len(self.__world[y])):
+                ceil = self.__world[y][x]
+
+                if ceil != ' ':
+                    continue
+
+                if self.get_entity_at(x, y) is None:
+                    empty_list.append((x, y))
+
+        return empty_list
+
     def get_entity_at(self, x: int, y: int) -> Entity | None:
         """
         Retrieves an entity at the given coordinates.
@@ -78,21 +101,34 @@ class World:
 
         Returns:
             object | None: The entity found at the coordinates, or None if
-                empty.
+            empty.
         """
         for entity in self.__entities:
             if entity.get_x() == x and entity.get_y() == y:
                 return entity
         return None
 
-    def spawn_entity(self, entity) -> None:
+    def spawn_entity(self, entity: Entity) -> None:
         """
         Adds an entity to the world.
 
         Args:
             entity (object): The entity to add.
         """
+        x, y = random.choice(self.get_empty_locations())
+
+        entity.teleport(x, y)
+
         self.__entities.append(entity)
+
+    def remove_entity(self, entity: Entity):
+        """
+        Removes an entity from the world.
+
+        Args:
+            entity (Entity): The entity to remove.
+        """
+        self.__entities.remove(entity)
 
     def render(self):
         """
