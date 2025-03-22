@@ -139,8 +139,62 @@ class Snake(Entity, SnakeInterface):
         """
         return len(self.__body) + 1
 
-    def see(self):
-        pass
+    def get_state_at(self, x: int, y: int) -> str | None:
+        """
+        Returns the state of a given position in the game world.
+
+        Args:
+            x (int): The X-coordinate of the position.
+            y (int): The Y-coordinate of the position.
+
+        Returns:
+            str | None: A character representing the state of the position:
+                '*' for a wall,
+                '.' for a green apple,
+                '~' for a red apple,
+                'H' for the snake's head,
+                'S' for the snake's body,
+                None if the position is empty.
+        """
+        info = self.__world.get_location(x, y)
+
+        if info.is_wall():
+            return '*'
+
+        if isinstance(info.get_entity(), Apple):
+            apple: Apple = info.get_entity()
+            return '.' if apple.is_green() else '~'
+
+        if x == self.get_x() and y == self.get_y():
+            return 'H'
+
+        if (x, y) in self.__body:
+            return 'S'
+
+        return None
+
+    def see(self) -> list[list[str]]:
+        """
+        Returns a 2D grid representation of the world from the snake's
+        perspective.
+
+        The grid contains the state of each position in the game world.
+
+        Returns:
+            list[list[str]]: A 2D list where each element represents a position
+            in the world as returned by `get_state_at()`.
+        """
+        height = self.__world.get_height() + 2
+        width = self.__world.get_width() + 2
+        state = [[None for _ in range(width)] for _ in range(height)]
+
+        for x in range(width):
+            state[self.get_y()][x] = self.get_state_at(x, self.get_y())
+
+        for y in range(height):
+            state[y][self.get_x()] = self.get_state_at(self.get_x(), y)
+
+        return state
 
     def get_body(self) -> deque[tuple[int, int]]:
         """

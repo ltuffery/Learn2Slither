@@ -48,6 +48,24 @@ class World:
             row.append('*')
             self.__world.append(row)
 
+    def get_width(self) -> int:
+        """
+        Returns the width of the object.
+
+        Returns:
+            int: The width of the object.
+        """
+        return self.__width
+
+    def get_height(self) -> int:
+        """
+        Returns the height of the object.
+
+        Returns:
+            int: The height of the object.
+        """
+        return self.__height
+
     def get_location(self, x: int, y: int) -> MapLocation:
         """
         Retrieves a `MapLocation` object representing a given position.
