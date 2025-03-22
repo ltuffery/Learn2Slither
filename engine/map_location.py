@@ -1,4 +1,4 @@
-from api.entity.entity import Entity
+from engine.entity.entity import Entity
 
 
 class MapLocation:

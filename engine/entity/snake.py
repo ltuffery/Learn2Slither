@@ -1,13 +1,14 @@
 from api.direction import Direction
-from api.exception.gameover import GameOver
-from api.entity.apple import Apple
-from api.world import World
-from api.entity.entity import Entity
+from api.snake import SnakeInterface
+from engine.exception.gameover import GameOver
+from engine.entity.apple import Apple
+from engine.world import World
+from engine.entity.entity import Entity
 import random
 from collections import deque
 
 
-class Snake(Entity):
+class Snake(Entity, SnakeInterface):
     """
     Represents a snake in the game, which moves, grows, and interacts with the
     world.
@@ -137,6 +138,9 @@ class Snake(Entity):
             int: The total number of segments in the snake.
         """
         return len(self.__body) + 1
+
+    def see(self):
+        pass
 
     def get_body(self) -> deque[tuple[int, int]]:
         """

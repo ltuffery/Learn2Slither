@@ -1,7 +1,7 @@
 import unittest
-from api.entity.snake import Snake
+from engine.entity.snake import Snake
 from api.direction import Direction
-from api.world import World
+from engine.world import World
 
 
 class TestSnake(unittest.TestCase):
