@@ -1,6 +1,6 @@
 from enum import Enum
-from api.entity.entity import Entity
-from api.world import World
+from engine.entity.entity import Entity
+from engine.world import World
 
 
 class AppleType(Enum):

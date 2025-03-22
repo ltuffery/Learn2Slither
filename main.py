@@ -1,8 +1,12 @@
-from api.world import World
+from engine.world import World
 from api.direction import Direction
-from api.exception.gameover import GameOver
-from api.entity.snake import Snake
-from api.entity.apple import Apple, AppleType
+from engine.exception.gameover import GameOver
+from engine.entity.snake import Snake
+from engine.entity.apple import Apple, AppleType
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 world = World()
 snake = Snake(world, 5, 5, Direction.SOUTH)

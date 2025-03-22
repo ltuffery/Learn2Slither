@@ -1,5 +1,5 @@
-from api.map_location import MapLocation
-from api.entity.entity import Entity
+from engine.map_location import MapLocation
+from engine.entity.entity import Entity
 import sys
 import copy
 import random
