@@ -60,15 +60,28 @@ class Snake(Entity, SnakeInterface):
         new_body = deque()
         for _ in range(len(self.__body)):
             dir_name = self.__last_direction.name
-            self.__last_direction = random.choice([
+            all_dir = [
                 d for d in list(Direction) if d.name != dir_name
-            ])
-            dir_x, dir_y = self.__last_direction.value
+            ]
+            is_empty = False
 
-            x += dir_x
-            y += dir_y
+            while not is_empty and len(all_dir) > 0:
+                self.__last_direction = random.choice(all_dir)
+                dir_x, dir_y = self.__last_direction.value
 
-            new_body.append((x, y))
+                x += dir_x
+                y += dir_y
+
+                is_empty = self.__world.get_location(x, y).is_empty()
+
+                if not is_empty or (x, y) in new_body:
+                    is_empty = False
+                    x -= dir_x
+                    y -= dir_y
+                    all_dir.remove(self.__last_direction)
+                    continue
+
+                new_body.append((x, y))
 
         self.__body = new_body
 

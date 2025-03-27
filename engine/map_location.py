@@ -64,3 +64,12 @@ class MapLocation:
             is no entity.
         """
         return self.__entity
+
+    def is_empty(self) -> bool:
+        """
+        Checks if the location is empty.
+
+        Returns:
+            bool: True if the location is empty, False otherwise.
+        """
+        return not self.__is_wall and self.__entity is None

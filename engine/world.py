@@ -135,9 +135,9 @@ class World:
         """
         x, y = random.choice(self.get_empty_locations())
 
-        entity.teleport(x, y)
-
         self.__entities.append(entity)
+
+        entity.teleport(x, y)
 
     def remove_entity(self, entity: Entity):
         """
