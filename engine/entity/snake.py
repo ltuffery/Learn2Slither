@@ -85,7 +85,7 @@ class Snake(Entity, SnakeInterface):
 
         self.__body = new_body
 
-    def move(self, direction: Direction) -> None:
+    def move(self, direction: Direction) -> int:
         """
         Moves the snake in the given direction. If the new location is not
         passable, the game ends.
@@ -97,6 +97,7 @@ class Snake(Entity, SnakeInterface):
         Raises:
             GameOver: If the snake collides with an obstacle or itself.
         """
+        reward = 0
         x, y = direction.value
         new_x = self.get_x() + x
         new_y = self.get_y() + y
@@ -106,7 +107,7 @@ class Snake(Entity, SnakeInterface):
             raise GameOver("End game")
 
         if isinstance(info.get_entity(), Apple):
-            self.eat(info.get_entity())
+            reward = self.eat(info.get_entity())
 
         self.set_x(new_x)
         self.set_y(new_y)
@@ -115,8 +116,9 @@ class Snake(Entity, SnakeInterface):
         # Move the body segments following the head
         self.__body.appendleft((self.get_x() - x, self.get_y() - y))
         self.__body.pop()
+        return reward
 
-    def eat(self, apple: Apple) -> None:
+    def eat(self, apple: Apple) -> int:
         """
         Handles the snake eating an apple.
         The snake grows if the apple is green, otherwise, it loses a segment.
@@ -129,7 +131,7 @@ class Snake(Entity, SnakeInterface):
         """
         if apple.is_green():
             x, y = self.__last_direction.value
-            last_body = self.__body[-1]
+            last_body = self.__body[-1] if len(self.__body) > 0 else self.get_position()
 
             # Grow the snake by adding a new body segment
             self.__body.append((last_body[0] + x, last_body[1] + y))
@@ -141,6 +143,8 @@ class Snake(Entity, SnakeInterface):
             self.__body.pop()
 
         apple.consume()
+
+        return 10 if apple.is_green() else -5
 
     def size(self) -> int:
         """
@@ -207,6 +211,33 @@ class Snake(Entity, SnakeInterface):
         for y in range(height):
             state[y][self.get_x()] = self.get_state_at(self.get_x(), y)
 
+        return state
+
+    def get_state(self) -> list[bool]:
+        state = [False] * 12
+        see = self.see()
+
+        for x in range(self.get_x()):
+            if see[self.get_y()][x] == '.':
+                state[0 + int(x > self.get_x())] = True
+            elif see[self.get_y()][x] == '~':
+                state[4 + int(x > self.get_x())] = True
+        
+        for y in range(self.get_y()):
+            if see[y][self.get_x()] == '.':
+                state[2 + int(y > self.get_y())] = True
+            elif see[y][self.get_x()] == '~':
+                state[6 + int(y > self.get_y())] = True
+        
+        if see[self.get_y()][self.get_x() - 1] in ['*', 'S']:
+            state[8] = True
+        if see[self.get_y()][self.get_x() + 1] in ['*', 'S']:
+            state[9] = True
+        if see[self.get_y() - 1][self.get_x()] in ['*', 'S']:
+            state[10] = True
+        if see[self.get_y() + 1][self.get_x()] in ['*', 'S']:
+            state[11] = True
+        
         return state
 
     def get_body(self) -> deque[tuple[int, int]]:
