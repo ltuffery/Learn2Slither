@@ -116,6 +116,7 @@ class Snake(Entity, SnakeInterface):
         # Move the body segments following the head
         self.__body.appendleft((self.get_x() - x, self.get_y() - y))
         self.__body.pop()
+
         return reward
 
     def eat(self, apple: Apple) -> int:
@@ -144,7 +145,7 @@ class Snake(Entity, SnakeInterface):
 
         apple.consume()
 
-        return 10 if apple.is_green() else -5
+        return 10 if apple.is_green() else -15
 
     def size(self) -> int:
         """
