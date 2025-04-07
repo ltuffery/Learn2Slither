@@ -5,6 +5,7 @@ from engine.entity.apple import Apple
 from engine.world import World
 from engine.entity.entity import Entity
 import random
+import engine.settings as settings
 from collections import deque
 
 
@@ -145,7 +146,7 @@ class Snake(Entity, SnakeInterface):
 
         apple.consume()
 
-        return 10 if apple.is_green() else -15
+        return apple.get_reward()
 
     def size(self) -> int:
         """
@@ -167,7 +168,7 @@ class Snake(Entity, SnakeInterface):
 
         Returns:
             str | None: A character representing the state of the position:
-                '*' for a wall,
+                settings.WALL_CHAR for a wall,
                 '.' for a green apple,
                 '~' for a red apple,
                 'H' for the snake's head,
@@ -177,17 +178,20 @@ class Snake(Entity, SnakeInterface):
         info = self.__world.get_location(x, y)
 
         if info.is_wall():
-            return '*'
+            return settings.WALL_CHAR
 
         if isinstance(info.get_entity(), Apple):
             apple: Apple = info.get_entity()
-            return '.' if apple.is_green() else '~'
+            if apple.is_green():
+                return settings.GREEN_APPLE_CHAR
+            else:
+                return settings.RED_APPLE_CHAR
 
         if x == self.get_x() and y == self.get_y():
-            return 'H'
+            return settings.SNAKE_HEAD_CHAR
 
         if (x, y) in self.__body:
-            return 'S'
+            return settings.SNAKE_SEGMENT_CHAR
 
         return None
 
@@ -219,24 +223,26 @@ class Snake(Entity, SnakeInterface):
         see = self.see()
 
         for x in range(self.get_x()):
-            if see[self.get_y()][x] == '.':
+            if see[self.get_y()][x] == settings.GREEN_APPLE_CHAR:
                 state[0 + int(x > self.get_x())] = True
-            elif see[self.get_y()][x] == '~':
+            elif see[self.get_y()][x] == settings.RED_APPLE_CHAR:
                 state[4 + int(x > self.get_x())] = True
         
         for y in range(self.get_y()):
-            if see[y][self.get_x()] == '.':
+            if see[y][self.get_x()] == settings.GREEN_APPLE_CHAR:
                 state[2 + int(y > self.get_y())] = True
-            elif see[y][self.get_x()] == '~':
+            elif see[y][self.get_x()] == settings.RED_APPLE_CHAR:
                 state[6 + int(y > self.get_y())] = True
-        
-        if see[self.get_y()][self.get_x() - 1] in ['*', 'S']:
+
+        not_passable = [settings.WALL_CHAR, settings.SNAKE_SEGMENT_CHAR]
+
+        if see[self.get_y()][self.get_x() - 1] in not_passable:
             state[8] = True
-        if see[self.get_y()][self.get_x() + 1] in ['*', 'S']:
+        if see[self.get_y()][self.get_x() + 1] in not_passable:
             state[9] = True
-        if see[self.get_y() - 1][self.get_x()] in ['*', 'S']:
+        if see[self.get_y() - 1][self.get_x()] in not_passable:
             state[10] = True
-        if see[self.get_y() + 1][self.get_x()] in ['*', 'S']:
+        if see[self.get_y() + 1][self.get_x()] in not_passable:
             state[11] = True
         
         return state
@@ -258,7 +264,7 @@ class Snake(Entity, SnakeInterface):
         Returns:
             str: A string representing the snake, colored in yellow.
         """
-        return "\033[33m#\033[0m"
+        return f"\033[33m{settings.SNAKE_HEAD_CHAR}\033[0m"
 
     def render(self) -> list[tuple[str, int, int]]:
         """
@@ -269,5 +275,5 @@ class Snake(Entity, SnakeInterface):
             body positions.
         """
         render = super().render()
-        render.extend(("#", body[0], body[1]) for body in self.__body)
+        render.extend((settings.SNAKE_SEGMENT_CHAR, body[0], body[1]) for body in self.__body)
         return render

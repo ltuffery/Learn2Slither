@@ -1,6 +1,7 @@
 from enum import Enum
 from engine.entity.entity import Entity
 from engine.world import World
+import engine.settings as settings
 
 
 class AppleType(Enum):
@@ -11,8 +12,8 @@ class AppleType(Enum):
         RED (int): Represents a red apple.
         GREEN (int): Represents a green apple.
     """
-    RED = 0
-    GREEN = 1
+    RED = settings.RED_APPLE_REWARD
+    GREEN = settings.GREEN_APPLE_REWARD
 
 
 class Apple(Entity):
@@ -65,9 +66,9 @@ class Apple(Entity):
             formatting for the terminal.
         """
         if self.is_green():
-            return "\033[32m@\033[0m"  # Green apple
+            return f"\033[32m{settings.GREEN_APPLE_CHAR}\033[0m"
 
-        return "\033[31m@\033[0m"  # Red apple
+        return f"\033[31m{settings.RED_APPLE_CHAR}\033[0m"
 
     def consume(self):
         """
@@ -78,3 +79,6 @@ class Apple(Entity):
         """
         self.__world.remove_entity(self)
         self.__world.spawn_entity(self)
+    
+    def get_reward(self):
+        return self.__apple_type.value

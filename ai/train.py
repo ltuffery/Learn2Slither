@@ -2,16 +2,11 @@ from engine.game import Game
 from api.direction import Direction
 import numpy as np
 import csv
+import engine.settings as settings
 from engine.exception.gameover import GameOver
 
 
-GRID_SIZE = 10
-EPISODES = 5000
-ALPHA = 0.1
-GAMMA = 0.9
-EPSILON = 1.0
-EPSILON_DECAY = 0.995
-
+EPSILON = settings.EPSILON
 Q = {}
 
 def get_Q(state, action):
@@ -37,7 +32,7 @@ def train():
         writer = csv.writer(file)
         writer.writerow(["Total_Reward"])  # En-tête du fichier CSV
 
-        for i in range(EPISODES):
+        for i in range(settings.EPISODES):
             isLast = False
             env.start()
             snake = env.get_snake()
@@ -56,8 +51,8 @@ def train():
                 s_next = snake.get_state()
 
                 best_next_action = max(range(4), key=lambda a: get_Q(s_next, a))
-                Q[(tuple(s), a)] = get_Q(s, a) + ALPHA * (
-                    r + GAMMA * get_Q(s_next, best_next_action) - get_Q(s, a)
+                Q[(tuple(s), a)] = get_Q(s, a) + settings.ALPHA * (
+                    r + settings.GAMMA * get_Q(s_next, best_next_action) - get_Q(s, a)
                 )
 
                 total_reward += r
@@ -68,8 +63,8 @@ def train():
             print(f"Épisode {i}, Score: {total_reward}")
             writer.writerow([total_reward])
         
-            EPSILON *= EPSILON_DECAY
-            EPSILON = max(EPSILON, 0.01)  # Ne descend pas sous 1%
+            EPSILON *= settings.EPSILON_DECAY
+            EPSILON = max(EPSILON, settings.EPSILON_MIN)
         
         with open("data/q_table.csv", "w", newline="") as f:
             writer = csv.writer(f)
