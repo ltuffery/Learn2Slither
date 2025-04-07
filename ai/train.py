@@ -9,6 +9,17 @@ from engine.exception.gameover import GameOver
 EPSILON = settings.EPSILON
 Q = {}
 
+def progress_bar(i: int):
+    progress_blocks = 20
+    progress_ratio = (i) / settings.EPISODES
+    filled_blocks = int(progress_ratio * progress_blocks)
+
+    load_bar = "#" * filled_blocks + " " * (progress_blocks - filled_blocks)
+    print(f"\r[{load_bar}] {i}/{settings.EPISODES}", end="")
+
+    if i == settings.EPISODES:
+        print("")
+
 def get_Q(state, action):
     return Q.get((tuple(state), action), 0.0)
 
@@ -60,7 +71,8 @@ def train():
 
                 all_action[i].append(tuple(s))
 
-            print(f"Épisode {i}, Score: {total_reward}")
+            progress_bar(i + 1)
+
             writer.writerow([total_reward])
         
             EPSILON *= settings.EPSILON_DECAY

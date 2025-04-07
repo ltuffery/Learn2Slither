@@ -109,6 +109,8 @@ class Snake(Entity, SnakeInterface):
 
         if isinstance(info.get_entity(), Apple):
             reward = self.eat(info.get_entity())
+        else:
+            reward = settings.EAT_NOTHING_REWARD
 
         self.set_x(new_x)
         self.set_y(new_y)
