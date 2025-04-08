@@ -135,7 +135,11 @@ class Snake(Entity, SnakeInterface):
         """
         if apple.is_green():
             x, y = self.__last_direction.value
-            last_body = self.__body[-1] if len(self.__body) > 0 else self.get_position()
+
+            if len(self.__body) > 0:
+                last_body = self.__body[-1]
+            else:
+                last_body = self.get_position()
 
             # Grow the snake by adding a new body segment
             self.__body.append((last_body[0] + x, last_body[1] + y))
@@ -229,7 +233,7 @@ class Snake(Entity, SnakeInterface):
                 state[0 + int(x > self.get_x())] = True
             elif see[self.get_y()][x] == settings.RED_APPLE_CHAR:
                 state[4 + int(x > self.get_x())] = True
-        
+
         for y in range(self.get_y()):
             if see[y][self.get_x()] == settings.GREEN_APPLE_CHAR:
                 state[2 + int(y > self.get_y())] = True
@@ -246,7 +250,7 @@ class Snake(Entity, SnakeInterface):
             state[10] = True
         if see[self.get_y() + 1][self.get_x()] in not_passable:
             state[11] = True
-        
+
         return state
 
     def get_body(self) -> deque[tuple[int, int]]:
@@ -277,5 +281,8 @@ class Snake(Entity, SnakeInterface):
             body positions.
         """
         render = super().render()
-        render.extend((settings.SNAKE_SEGMENT_CHAR, body[0], body[1]) for body in self.__body)
+
+        for body in self.__body:
+            render.extend((settings.SNAKE_SEGMENT_CHAR, body[0], body[1]))
+
         return render

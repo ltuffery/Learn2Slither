@@ -79,6 +79,6 @@ class Apple(Entity):
         """
         self.__world.remove_entity(self)
         self.__world.spawn_entity(self)
-    
+
     def get_reward(self):
         return self.__apple_type.value

@@ -125,7 +125,7 @@ class World:
             if entity.get_x() == x and entity.get_y() == y:
                 return entity
         return None
-    
+
     def get_entities(self) -> list[Entity]:
         return self.__entities
 
