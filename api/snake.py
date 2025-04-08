@@ -11,7 +11,7 @@ class SnakeInterface:
     """
 
     @abstractmethod
-    def move(self, direction: Direction) -> None:
+    def move(self, direction: Direction) -> int:
         """
         Moves the snake in the specified direction.
 
@@ -30,4 +30,8 @@ class SnakeInterface:
             list[list[str]]: A 2D list representing what the snake can see
             around it.
         """
+        pass
+
+    @abstractmethod
+    def get_state(self) -> list[bool]:
         pass
