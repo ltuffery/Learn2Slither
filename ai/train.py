@@ -5,14 +5,22 @@ import csv
 import engine.settings as settings
 from engine.exception.gameover import GameOver
 
-
+# Exploration rate
 EPSILON = settings.EPSILON
+
+# Q-table: maps (state, action) pairs to Q-values
 Q = {}
 
 
-def progress_bar(i: int):
+def progress_bar(i: int) -> None:
+    """
+    Displays a progress bar in the console during training.
+
+    Args:
+        i (int): The current episode number.
+    """
     progress_blocks = 20
-    progress_ratio = (i) / settings.EPISODES
+    progress_ratio = i / settings.EPISODES
     filled_blocks = int(progress_ratio * progress_blocks)
 
     load_bar = "#" * filled_blocks + " " * (progress_blocks - filled_blocks)
@@ -22,11 +30,30 @@ def progress_bar(i: int):
         print("")
 
 
-def get_Q(state, action):
+def get_Q(state: list[bool], action: int) -> float:
+    """
+    Retrieves the Q-value for a given (state, action) pair.
+
+    Args:
+        state (list[bool]): The current state of the agent (snake).
+        action (int): The action index (0 to 3, representing directions).
+
+    Returns:
+        float: The Q-value for the given pair, or 0.0 if not yet defined.
+    """
     return Q.get((tuple(state), action), 0.0)
 
 
-def action(state):
+def action(state: list[bool]) -> int:
+    """
+    Selects an action using the epsilon-greedy policy.
+
+    Args:
+        state (list[bool]): The current state.
+
+    Returns:
+        int: The index of the selected action.
+    """
     global EPSILON
 
     if np.random.uniform() < EPSILON:
@@ -35,7 +62,14 @@ def action(state):
         return max(range(4), key=lambda a: get_Q(state, a))  # Exploitation
 
 
-def train():
+def train() -> None:
+    """
+    Trains the snake agent using Q-learning.
+
+    - Initializes a new game environment for each episode.
+    - Updates the Q-table based on the rewards received.
+    - Saves rewards and the Q-table to CSV files after training.
+    """
     global EPSILON
 
     env = Game()
@@ -43,6 +77,7 @@ def train():
     snake = env.get_snake()
     all_action: list[list] = list()
 
+    # Create rewards log file
     with open("data/rewards.csv", "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["Total_Reward"])
@@ -61,19 +96,19 @@ def train():
                     r = snake.move(list(Direction)[a])
                 except GameOver:
                     isLast = True
-                    r = -15
+                    r = -15  # Penalty for dying
 
                 s_next = snake.get_state()
 
+                # Q-learning update rule
                 next_action = max(range(4), key=lambda a: get_Q(s_next, a))
+                next_q = get_Q(s_next, next_action)
                 Q[(tuple(s), a)] = get_Q(s, a) + settings.ALPHA * (
-                    r + settings.GAMMA
-                    * get_Q(s_next, next_action) - get_Q(s, a)
+                    r + settings.GAMMA * next_q - get_Q(s, a)
                 )
 
                 total_reward += r
                 s = s_next
-
                 all_action[i].append(tuple(s))
 
             progress_bar(i + 1)
@@ -83,6 +118,7 @@ def train():
             EPSILON *= settings.EPSILON_DECAY
             EPSILON = max(EPSILON, settings.EPSILON_MIN)
 
+        # Save Q-table to CSV
         with open("data/q_table.csv", "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(["State", "Action", "Q_Value"])
@@ -91,4 +127,5 @@ def train():
                 writer.writerow([state, list(Direction)[a].name, q_value])
 
 
+# Start training when this script is run
 train()

@@ -225,6 +225,20 @@ class Snake(Entity, SnakeInterface):
         return state
 
     def get_state(self) -> list[bool]:
+        """
+        Returns a boolean list representing the game state from the snake's
+        perspective.
+
+        The list contains 12 booleans:
+            - 0-1: Green apple on the left/right
+            - 2-3: Green apple on the top/bottom
+            - 4-5: Red apple on the left/right
+            - 6-7: Red apple on the top/bottom
+            - 8-11: Wall or body on left, right, top, bottom
+
+        Returns:
+            list[bool]: The encoded state of the environment.
+        """
         state = [False] * 12
         see = self.see()
 
@@ -274,11 +288,13 @@ class Snake(Entity, SnakeInterface):
 
     def render(self) -> list[tuple[str, int, int]]:
         """
-        Renders the snake and its body in the world.
+        Renders the snake's head and body in the world.
 
         Returns:
-            list[tuple[str, int, int]]: A list containing the snake's head and
-            body positions.
+            list[tuple[str, int, int]]: A list containing tuples with:
+                - the character to display,
+                - the X coordinate,
+                - the Y coordinate.
         """
         render = super().render()
 

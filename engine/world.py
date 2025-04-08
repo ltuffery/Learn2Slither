@@ -127,6 +127,12 @@ class World:
         return None
 
     def get_entities(self) -> list[Entity]:
+        """
+        Returns the list of all entities currently present in the world.
+
+        Returns:
+            list[Entity]: A list containing all entities in the world.
+        """
         return self.__entities
 
     def spawn_entity(self, entity: Entity) -> None:
