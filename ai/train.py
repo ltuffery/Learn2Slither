@@ -96,7 +96,7 @@ def train() -> None:
                     r = snake.move(list(Direction)[a])
                 except GameOver:
                     isLast = True
-                    r = -15  # Penalty for dying
+                    r = settings.GAMEOVER_REWARD  # Penalty for dying
 
                 s_next = snake.get_state()
 
