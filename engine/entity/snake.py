@@ -1,5 +1,4 @@
-from api.direction import Direction
-from api.snake import SnakeInterface
+from engine.direction import Direction
 from engine.exception.gameover import GameOver
 from engine.entity.apple import Apple
 from engine.world import World
@@ -9,7 +8,7 @@ import engine.settings as settings
 from collections import deque
 
 
-class Snake(Entity, SnakeInterface):
+class Snake(Entity):
     """
     Represents a snake in the game, which moves, grows, and interacts with the
     world.
@@ -299,6 +298,6 @@ class Snake(Entity, SnakeInterface):
         render = super().render()
 
         for body in self.__body:
-            render.extend((settings.SNAKE_SEGMENT_CHAR, body[0], body[1]))
+            render.append((settings.SNAKE_SEGMENT_CHAR, body[0], body[1]))
 
         return render
