@@ -1,7 +1,7 @@
 from engine.world import World
-from engine.entity.snake import Snake, SnakeInterface
+from engine.entity.snake import Snake
 from engine.entity.apple import Apple, AppleType
-from api.direction import Direction
+from engine.direction import Direction
 
 
 class Game:
@@ -32,7 +32,7 @@ class Game:
         self.__world.spawn_entity(Apple(self.__world, 0, 0, AppleType.GREEN))
         self.__world.spawn_entity(Apple(self.__world, 0, 0, AppleType.RED))
 
-    def get_snake(self) -> SnakeInterface:
+    def get_snake(self) -> Snake:
         """
         Returns the snake instance currently used in the game.
 

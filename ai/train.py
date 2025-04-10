@@ -1,5 +1,5 @@
 from engine.game import Game
-from api.direction import Direction
+from engine.direction import Direction
 import numpy as np
 import csv
 import engine.settings as settings

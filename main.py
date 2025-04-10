@@ -1,5 +1,5 @@
 from engine.world import World
-from api.direction import Direction
+from engine.direction import Direction
 from engine.exception.gameover import GameOver
 from engine.entity.snake import Snake
 from engine.entity.apple import Apple, AppleType
