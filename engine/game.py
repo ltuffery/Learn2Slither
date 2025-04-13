@@ -19,6 +19,7 @@ class Game:
         """
         self.__world: World = None
         self.__snake: Snake = None  # Corrected type hint from World to Snake
+        self.__replay: list[dict] = []
 
     def start(self) -> None:
         """
@@ -40,3 +41,6 @@ class Game:
             SnakeInterface: The snake object implementing SnakeInterface.
         """
         return self.__snake
+
+    def get_replay(self) -> list[dict]:
+        return self.__replay

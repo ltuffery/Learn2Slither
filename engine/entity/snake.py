@@ -97,7 +97,7 @@ class Snake(Entity):
         Raises:
             GameOver: If the snake collides with an obstacle or itself.
         """
-        reward = 0
+        reward = settings.EAT_NOTHING_REWARD
         x, y = direction.value
         new_x = self.get_x() + x
         new_y = self.get_y() + y
@@ -108,8 +108,6 @@ class Snake(Entity):
 
         if isinstance(info.get_entity(), Apple):
             reward = self.eat(info.get_entity())
-        else:
-            reward = settings.EAT_NOTHING_REWARD
 
         self.set_x(new_x)
         self.set_y(new_y)
