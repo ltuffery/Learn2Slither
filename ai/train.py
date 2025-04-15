@@ -98,7 +98,7 @@ def train() -> None:
                     isLast = True
                     r = settings.GAMEOVER_REWARD  # Penalty for dying
 
-                replay.save_game_state(env)
+                replay.save_game_state(env, list(Direction)[a])
                 s_next = snake.get_state()
 
                 # Q-learning update rule

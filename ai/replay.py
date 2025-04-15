@@ -1,6 +1,7 @@
 from engine.game import Game
 from engine.entity.apple import Apple
 from engine.entity.snake import Snake
+from engine.direction import Direction
 import json
 import time
 
@@ -15,11 +16,12 @@ def reset_replay():
         replay_storage.append(replay_data)
     replay_data = []
 
-def save_game_state(game: Game):
+def save_game_state(game: Game, direction: Direction):
     global replay_data
 
     data = {
-        "apples": []
+        "direction": direction.name,
+        "apples": [],
     }
 
     for entity in game.get_world().get_entities():
@@ -48,5 +50,5 @@ def play_replay():
             game.set_snake(replay["head"], replay["body"])
             game.set_apples(replay["apples"])
 
-            game.get_world().render(f"Episode {str(i)}\n")
+            game.get_world().render(f"Episode {str(i)}\n\n{replay["direction"]}")
             time.sleep(0.3)
