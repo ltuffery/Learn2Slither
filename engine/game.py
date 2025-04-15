@@ -17,9 +17,8 @@ class Game:
         """
         Initializes the Game instance without starting the game.
         """
-        self.__world: World = None
+        self.__world: World = World()
         self.__snake: Snake = None  # Corrected type hint from World to Snake
-        self.__replay: list[dict] = []
 
     def start(self) -> None:
         """
@@ -41,6 +40,22 @@ class Game:
             SnakeInterface: The snake object implementing SnakeInterface.
         """
         return self.__snake
+    
+    def get_world(self) -> World:
+        return self.__world
+    
+    def set_snake(self, head: tuple[int, int], body: list[tuple[int, int]]):
+        self.__snake = Snake(self.__world, head[0], head[1], Direction.EAST)
 
-    def get_replay(self) -> list[dict]:
-        return self.__replay
+        self.__snake.set_body(body)
+
+        self.__world.add_entity(self.__snake)
+    
+    def set_apples(self, apples: list[tuple[int, int, bool]]):
+        for apple in apples:
+            if apple[2] is True:
+                type = AppleType.GREEN
+            else:
+                type = AppleType.RED
+
+            self.__world.add_entity(Apple(self.__world, apple[0], apple[1], type))

@@ -273,6 +273,9 @@ class Snake(Entity):
         """
         return self.__body
 
+    def set_body(self, body: list[tuple[int, int]]):
+        self.__body = deque(body)
+
     def get_char(self) -> str:
         """
         Returns the character representation of the snake, colored for terminal
