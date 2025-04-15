@@ -97,7 +97,7 @@ class Snake(Entity):
         Raises:
             GameOver: If the snake collides with an obstacle or itself.
         """
-        reward = 0
+        reward = settings.EAT_NOTHING_REWARD
         x, y = direction.value
         new_x = self.get_x() + x
         new_y = self.get_y() + y
@@ -108,8 +108,6 @@ class Snake(Entity):
 
         if isinstance(info.get_entity(), Apple):
             reward = self.eat(info.get_entity())
-        else:
-            reward = settings.EAT_NOTHING_REWARD
 
         self.set_x(new_x)
         self.set_y(new_y)
@@ -274,6 +272,17 @@ class Snake(Entity):
             deque[tuple[int, int]]: The body segments of the snake.
         """
         return self.__body
+
+    def set_body(self, body: list[tuple[int, int]]):
+        """
+        Sets the snake's body to the specified sequence of positions.
+
+        Args:
+            body (list[tuple[int, int]]): A list of (x, y) coordinates
+            representing the new body segments of the snake, where the first
+            element is the head.
+        """
+        self.__body = deque(body)
 
     def get_char(self) -> str:
         """

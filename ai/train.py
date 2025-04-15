@@ -4,6 +4,7 @@ import numpy as np
 import csv
 import engine.settings as settings
 from engine.exception.gameover import GameOver
+import ai.replay as replay
 
 # Exploration rate
 EPSILON = settings.EPSILON
@@ -73,8 +74,6 @@ def train() -> None:
     global EPSILON
 
     env = Game()
-    env.start()
-    snake = env.get_snake()
     all_action: list[list] = list()
 
     # Create rewards log file
@@ -89,6 +88,7 @@ def train() -> None:
             s = snake.get_state()
             total_reward = 0
             all_action.append(list())
+            replay.reset_replay()
 
             while not isLast:
                 a = action(s)
@@ -98,6 +98,7 @@ def train() -> None:
                     isLast = True
                     r = settings.GAMEOVER_REWARD  # Penalty for dying
 
+                replay.save_game_state(env, list(Direction)[a])
                 s_next = snake.get_state()
 
                 # Q-learning update rule
@@ -107,7 +108,8 @@ def train() -> None:
                     r + settings.GAMMA * next_q - get_Q(s, a)
                 )
 
-                total_reward += r
+                if r > 0:
+                    total_reward += 1
                 s = s_next
                 all_action[i].append(tuple(s))
 
@@ -118,6 +120,7 @@ def train() -> None:
             EPSILON *= settings.EPSILON_DECAY
             EPSILON = max(EPSILON, settings.EPSILON_MIN)
 
+        replay.create_replay()
         # Save Q-table to CSV
         with open("data/q_table.csv", "w", newline="") as f:
             writer = csv.writer(f)

@@ -135,6 +135,15 @@ class World:
         """
         return self.__entities
 
+    def add_entity(self, entity: Entity):
+        """
+        Adds an entity to the world.
+
+        Args:
+            entity (Entity): The entity to be added to the world.
+        """
+        self.__entities.append(entity)
+
     def spawn_entity(self, entity: Entity) -> None:
         """
         Adds an entity to the world.
@@ -144,9 +153,9 @@ class World:
         """
         x, y = random.choice(self.get_empty_locations())
 
-        self.__entities.append(entity)
-
         entity.teleport(x, y)
+
+        self.add_entity(entity)
 
     def remove_entity(self, entity: Entity):
         """
@@ -157,7 +166,7 @@ class World:
         """
         self.__entities.remove(entity)
 
-    def render(self):
+    def render(self, title: str = ""):
         """
         Renders the current state of the world to the terminal.
         """
@@ -170,6 +179,7 @@ class World:
             for position in entity.render():
                 world[position[2]][position[1]] = position[0]
 
+        print(title)
         for line in world:
             print("".join(line))
 
