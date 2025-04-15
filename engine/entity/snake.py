@@ -274,6 +274,14 @@ class Snake(Entity):
         return self.__body
 
     def set_body(self, body: list[tuple[int, int]]):
+        """
+        Sets the snake's body to the specified sequence of positions.
+
+        Args:
+            body (list[tuple[int, int]]): A list of (x, y) coordinates
+            representing the new body segments of the snake, where the first
+            element is the head.
+        """
         self.__body = deque(body)
 
     def get_char(self) -> str:

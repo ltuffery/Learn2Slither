@@ -136,6 +136,12 @@ class World:
         return self.__entities
 
     def add_entity(self, entity: Entity):
+        """
+        Adds an entity to the world.
+
+        Args:
+            entity (Entity): The entity to be added to the world.
+        """
         self.__entities.append(entity)
 
     def spawn_entity(self, entity: Entity) -> None:

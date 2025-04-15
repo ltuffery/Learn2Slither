@@ -6,24 +6,31 @@ from engine.direction import Direction
 
 class Game:
     """
-    Manages the setup and lifecycle of the Snake game.
+    Manages the setup, state, and entities of the Snake game.
+
+    This class handles the game world, the player-controlled snake,
+    and spawning of apples within the environment.
 
     Attributes:
-        __world (World): The game world where entities are placed.
-        __snake (Snake): The snake controlled during the game.
+        __world (World): The game world that contains all entities.
+        __snake (Snake): The snake instance controlled by the game logic.
     """
 
     def __init__(self):
         """
-        Initializes the Game instance without starting the game.
+        Initializes a Game instance without starting the game.
+
+        The world is initialized, and the snake is set to None.
         """
         self.__world: World = World()
-        self.__snake: Snake = None  # Corrected type hint from World to Snake
+        self.__snake: Snake = None
 
     def start(self) -> None:
         """
-        Starts the game by creating the world, initializing the snake,
-        and spawning apples in the world.
+        Starts or resets the game.
+
+        Initializes the world and places the snake and two apples
+        (one green and one red) at the starting position (0, 0).
         """
         self.__world = World()
         self.__snake = Snake(self.__world, 0, 0, Direction.EAST)
@@ -34,28 +41,51 @@ class Game:
 
     def get_snake(self) -> Snake:
         """
-        Returns the snake instance currently used in the game.
+        Retrieves the snake instance currently used in the game.
 
         Returns:
-            SnakeInterface: The snake object implementing SnakeInterface.
+            Snake: The snake entity controlled in the game.
         """
         return self.__snake
-    
+
     def get_world(self) -> World:
+        """
+        Retrieves the world instance used in the game.
+
+        Returns:
+            World: The current game world.
+        """
         return self.__world
-    
-    def set_snake(self, head: tuple[int, int], body: list[tuple[int, int]]):
+
+    def set_snake(self, head: tuple[int, int], body: list[tuple]) -> None:
+        """
+        Manually sets the snake's position and body segments in the world.
+
+        Useful for testing or restoring a saved state.
+
+        Args:
+            head (tuple[int, int]): The (x, y) coordinates of the snake's head.
+            body (list[tuple[int, int]]): A list of (x, y) tuples representing
+                                          the snake's body segments.
+        """
         self.__snake = Snake(self.__world, head[0], head[1], Direction.EAST)
-
         self.__snake.set_body(body)
-
         self.__world.add_entity(self.__snake)
-    
-    def set_apples(self, apples: list[tuple[int, int, bool]]):
-        for apple in apples:
-            if apple[2] is True:
-                type = AppleType.GREEN
-            else:
-                type = AppleType.RED
 
-            self.__world.add_entity(Apple(self.__world, apple[0], apple[1], type))
+    def set_apples(self, apples: list[tuple[int, int, bool]]) -> None:
+        """
+        Manually places apples in the world.
+
+        Each apple is defined by its position and type.
+
+        Args:
+            apples (list[tuple[int, int, bool]]): A list of tuples,
+                each representing an apple as (x, y, is_green), where
+                `is_green` is a boolean indicating whether the apple is green.
+        """
+        for apple in apples:
+            apple_type = AppleType.GREEN if apple[2] else AppleType.RED
+
+            self.__world.add_entity(
+                Apple(self.__world, apple[0], apple[1], apple_type)
+            )
