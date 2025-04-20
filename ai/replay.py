@@ -4,6 +4,7 @@ from engine.entity.snake import Snake
 from engine.direction import Direction
 import json
 import time
+import sys
 
 # Global storage for recorded gameplay
 replay_storage = []
@@ -67,7 +68,7 @@ def create_replay():
         json.dump(replay_storage, f)
 
 
-def play_replay():
+def play_replay(ep: int = -1):
     """
     Loads and replays the recorded gameplay from the JSON file.
 
@@ -75,6 +76,19 @@ def play_replay():
     """
     with open("replay/replay.json", "r") as f:
         all_replay = json.load(f)
+
+    if ep > -1:
+        for replay in all_replay[ep]:
+            game = Game()
+
+            game.set_snake(replay["head"], replay["body"])
+            game.set_apples(replay["apples"])
+
+            title = f"Episode {str(ep)}\n\n{replay['direction']}"
+
+            game.get_world().render(title)
+            time.sleep(0.3)
+        return
 
     for i, episode in enumerate(all_replay):
         for replay in episode:
@@ -90,4 +104,10 @@ def play_replay():
 
 
 if __name__ == '__main__':
-    play_replay()
+    if len(sys.argv) > 1:
+        try:
+            play_replay(int(sys.argv[1]))
+        except ValueError:
+            print("Bad argument")
+    else:
+        play_replay()
