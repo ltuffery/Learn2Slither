@@ -46,7 +46,7 @@ class Entity(ABC):
         Returns:
             tuple[int, int]: The position of the entity.
         """
-        return (self.get_x(), self.get_y())
+        return self.get_x(), self.get_y()
 
     def set_x(self, x: int) -> None:
         """
@@ -76,6 +76,20 @@ class Entity(ABC):
         """
         self.__x = x
         self.__y = y
+
+    def contains_point(self, x: int, y: int) -> bool:
+        """
+        Checks whether the point (x, y) is within the entity's position.
+
+        Parameters:
+            x (int): The X coordinate to check.
+            y (int): The Y coordinate to check.
+
+        Returns:
+            bool: True if the point (x, y) is within the entity's position,
+            False otherwise.
+        """
+        return (x, y) == self.get_position()
 
     @abstractmethod
     def get_char(self) -> str:

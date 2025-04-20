@@ -122,7 +122,7 @@ class World:
             empty.
         """
         for entity in self.__entities:
-            if entity.get_x() == x and entity.get_y() == y:
+            if entity.contains_point(x, y):
                 return entity
         return None
 
