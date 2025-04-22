@@ -73,8 +73,9 @@ class Snake(Entity):
                 y += dir_y
 
                 is_empty = self.__world.get_location(x, y).is_empty()
+                position = self.get_position()
 
-                if not is_empty or (x, y) in new_body or (x, y) == self.get_position():
+                if not is_empty or (x, y) in new_body or (x, y) == position:
                     is_empty = False
                     x -= dir_x
                     y -= dir_y
@@ -284,7 +285,7 @@ class Snake(Entity):
             element is the head.
         """
         self.__body = deque(body)
-        
+
     def contains_point(self, x: int, y: int) -> bool:
         """
         Checks whether the point (x, y) is within the entity's position.
