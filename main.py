@@ -20,7 +20,10 @@ world.spawn_entity(red_apple)
 while True:
     world.render()
 
-    key = input("Move (W/A/S/D) : ").lower()
+    try:
+        key = input("Move (W/A/S/D) : ").lower()
+    except:
+        continue
 
     if key == 'q':
         print('Quitting the program')
