@@ -1,0 +1,14 @@
+#!/bin/python3
+
+from argparse import ArgumentParser
+
+if __name__ == "__main__":
+    parser = ArgumentParser("snake")
+
+    parser.add_argument("-l", "--load")
+
+    args = parser.parse_args()
+
+    if args.load is not None:
+        with open(args.load, "r") as f:
+            print(f)
