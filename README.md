@@ -15,7 +15,14 @@ git clone https://github.com/ltuffery/Learn2Slither.git
 cd Learn2Slither
 ```
 
-2. Installez les dépendances :
+2. Créer un environnement virtuel
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+3. Installez les dépendances :
 
 ```bash
 pip install -r requirements.txt
