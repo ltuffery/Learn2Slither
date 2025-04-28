@@ -285,6 +285,9 @@ class Snake(Entity):
             element is the head.
         """
         self.__body = deque(body)
+    
+    def get_size(self) -> int:
+        return 1 + len(self.__body)
 
     def contains_point(self, x: int, y: int) -> bool:
         """

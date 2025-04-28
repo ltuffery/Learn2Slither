@@ -32,3 +32,7 @@ class Direction(Enum):
             return Direction.WEST
         else:
             return Direction.EAST
+    
+    @property
+    def index(self):
+        return list(Direction).index(self)
