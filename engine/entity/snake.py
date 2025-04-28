@@ -285,8 +285,18 @@ class Snake(Entity):
             element is the head.
         """
         self.__body = deque(body)
-    
+
     def get_size(self) -> int:
+        """
+        Returns the current size of the snake.
+
+        The size is calculated as 1 (for the snake's head) plus the length of
+        its body segments.
+
+        Returns:
+            int: The total number of segments composing the snake
+            (head + body).
+        """
         return 1 + len(self.__body)
 
     def contains_point(self, x: int, y: int) -> bool:

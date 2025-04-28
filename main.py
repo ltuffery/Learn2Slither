@@ -22,7 +22,7 @@ while True:
 
     try:
         key = input("Move (W/A/S/D) : ").lower()
-    except:
+    except Exception:
         continue
 
     if key == 'q':
