@@ -39,6 +39,8 @@ if __name__ == "__main__":
     parser = ArgumentParser("snake")
 
     parser.add_argument("-l", "--load")
+    parser.add_argument("-n", "--number", type=int)
+    parser.add_argument("--visual", action='store_true')
 
     args = parser.parse_args()
 
@@ -51,24 +53,31 @@ if __name__ == "__main__":
                 a = Direction[row['Action']].index
 
                 Q[(state, a)] = float(row['Q_Value'])
-        
-        isLast = False
-        game = Game()
 
-        game.start()
-        game.get_world().render()
+        n = 1
 
-        snake = game.get_snake()
+        if args.number:
+            n = int(args.number)
 
-        while not isLast:
-            s = snake.get_state()
-            a = action(s)
+        for i in range(n):
+            isLast = False
+            game = Game()
 
-            try:
-                r = snake.move(list(Direction)[a])
-            except:
-                isLast = True
-            
-            game.get_world().render()
-            time.sleep(0.3)
-        print(snake.get_size())
+            game.start()
+
+            snake = game.get_snake()
+
+            while not isLast:
+                s = snake.get_state()
+                a = action(s)
+
+                try:
+                    r = snake.move(list(Direction)[a])
+                except:
+                    isLast = True
+
+                if args.visual:
+                    game.get_world().render()
+                    time.sleep(0.3)
+
+            print(f"[{i + 1}] size : {snake.get_size()}")
