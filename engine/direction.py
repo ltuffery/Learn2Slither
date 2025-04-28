@@ -32,3 +32,17 @@ class Direction(Enum):
             return Direction.WEST
         else:
             return Direction.EAST
+
+    @property
+    def index(self):
+        """
+        Returns the index of the current Direction instance.
+
+        This property calculates the position of the current Direction
+        in the list of all possible Direction values.
+
+        Returns:
+            int: The index of the Direction instance within the Direction
+            enumeration.
+        """
+        return list(Direction).index(self)
