@@ -1,10 +1,10 @@
 from engine.game import Game
 from engine.direction import Direction
-import numpy as np
 import csv
 import engine.settings as settings
 from engine.exception.gameover import GameOver
 import ai.replay as replay
+from ai.utils import get_Q, action 
 
 # Exploration rate
 EPSILON = settings.EPSILON
@@ -29,38 +29,6 @@ def progress_bar(i: int) -> None:
 
     if i == settings.EPISODES:
         print("")
-
-
-def get_Q(state: list[bool], action: int) -> float:
-    """
-    Retrieves the Q-value for a given (state, action) pair.
-
-    Args:
-        state (list[bool]): The current state of the agent (snake).
-        action (int): The action index (0 to 3, representing directions).
-
-    Returns:
-        float: The Q-value for the given pair, or 0.0 if not yet defined.
-    """
-    return Q.get((tuple(state), action), 0.0)
-
-
-def action(state: list[bool]) -> int:
-    """
-    Selects an action using the epsilon-greedy policy.
-
-    Args:
-        state (list[bool]): The current state.
-
-    Returns:
-        int: The index of the selected action.
-    """
-    global EPSILON
-
-    if np.random.uniform() < EPSILON:
-        return np.random.randint(0, len(Direction))  # Exploration
-    else:
-        return max(range(4), key=lambda a: get_Q(state, a))  # Exploitation
 
 
 def train() -> None:
@@ -91,7 +59,7 @@ def train() -> None:
             replay.reset_replay()
 
             while not isLast:
-                a = action(s)
+                a = action(Q, s, EPSILON)
                 try:
                     r = snake.move(list(Direction)[a])
                 except GameOver:
@@ -102,10 +70,10 @@ def train() -> None:
                 s_next = snake.get_state()
 
                 # Q-learning update rule
-                next_action = max(range(4), key=lambda a: get_Q(s_next, a))
-                next_q = get_Q(s_next, next_action)
-                Q[(tuple(s), a)] = get_Q(s, a) + settings.ALPHA * (
-                    r + settings.GAMMA * next_q - get_Q(s, a)
+                next_action = max(range(4), key=lambda a: get_Q(Q, s_next, a))
+                next_q = get_Q(Q, s_next, next_action)
+                Q[(tuple(s), a)] = get_Q(Q, s, a) + settings.ALPHA * (
+                    r + settings.GAMMA * next_q - get_Q(Q, s, a)
                 )
 
                 if r > 0:

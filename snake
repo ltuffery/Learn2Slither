@@ -6,38 +6,20 @@ import time
 import numpy as np
 from engine.direction import Direction
 from engine.game import Game
+from ai.utils import action
 
+EXPLO = 0.0001
 Q = {}
 
-def get_Q(state: list[bool], action: int) -> float:
-    """
-    Retrieves the Q-value for a given (state, action) pair.
+def load_Q():
+    with open(args.load, "r") as file:
+        data = csv.DictReader(file)
 
-    Args:
-        state (list[bool]): The current state of the agent (snake).
-        action (int): The action index (0 to 3, representing directions).
+        for row in data:
+            state = eval(row['State'])
+            a = Direction[row['Action']].index
 
-    Returns:
-        float: The Q-value for the given pair, or 0.0 if not yet defined.
-    """
-    return Q.get((tuple(state), action), 0.0)
-
-
-def action(state: list[bool]) -> int:
-    """
-    Selects an action using the epsilon-greedy policy.
-
-    Args:
-        state (list[bool]): The current state.
-
-    Returns:
-        int: The index of the selected action.
-    """
-
-    if np.random.uniform() < 0.0001:
-        return np.random.randint(0, len(Direction))  # Exploration
-    else:
-        return max(range(4), key=lambda a: get_Q(state, a))  # Exploitation
+            Q[(state, a)] = float(row['Q_Value'])
 
 if __name__ == "__main__":
     parser = ArgumentParser("snake")
@@ -48,20 +30,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    n = 1
+
+    if args.number:
+        n = int(args.number)
+
     if args.load is not None:
-        with open(args.load, "r") as file:
-            data = csv.DictReader(file)
-
-            for row in data:
-                state = eval(row['State'])
-                a = Direction[row['Action']].index
-
-                Q[(state, a)] = float(row['Q_Value'])
-
-        n = 1
-
-        if args.number:
-            n = int(args.number)
+        load_Q()
 
         sizes = []
 
@@ -75,7 +50,7 @@ if __name__ == "__main__":
 
             while not isLast:
                 s = snake.get_state()
-                a = action(s)
+                a = action(Q, s, EXPLO)
 
                 try:
                     r = snake.move(list(Direction)[a])
@@ -88,5 +63,5 @@ if __name__ == "__main__":
 
             sizes.append(snake.get_size())
             print(f"[{i + 1}] size : {snake.get_size()}")
-        
+
         print(f"Size Avarage {np.average(sizes)}")
