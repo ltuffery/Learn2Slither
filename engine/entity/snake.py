@@ -311,7 +311,7 @@ class Snake(Entity):
             bool: True if the point (x, y) is within the entity's position,
             False otherwise.
         """
-        return super().contains_point(x, y) or (x, y) == self.get_body()
+        return super().contains_point(x, y) or (x, y) in self.get_body()
 
     def get_char(self) -> str:
         """
