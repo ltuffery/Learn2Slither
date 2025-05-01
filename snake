@@ -3,6 +3,7 @@
 from argparse import ArgumentParser
 import csv
 import time
+import numpy as np
 from engine.direction import Direction
 from engine.game import Game
 
@@ -33,7 +34,10 @@ def action(state: list[bool]) -> int:
         int: The index of the selected action.
     """
 
-    return max(range(4), key=lambda a: get_Q(state, a))
+    if np.random.uniform() < 0.0001:
+        return np.random.randint(0, len(Direction))  # Exploration
+    else:
+        return max(range(4), key=lambda a: get_Q(state, a))  # Exploitation
 
 if __name__ == "__main__":
     parser = ArgumentParser("snake")
@@ -59,6 +63,8 @@ if __name__ == "__main__":
         if args.number:
             n = int(args.number)
 
+        sizes = []
+
         for i in range(n):
             isLast = False
             game = Game()
@@ -80,4 +86,7 @@ if __name__ == "__main__":
                     game.get_world().render()
                     time.sleep(0.3)
 
+            sizes.append(snake.get_size())
             print(f"[{i + 1}] size : {snake.get_size()}")
+        
+        print(f"Size Avarage {np.average(sizes)}")

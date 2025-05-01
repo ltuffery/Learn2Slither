@@ -3,6 +3,7 @@ from engine.entity.entity import Entity
 import sys
 import copy
 import random
+import engine.settings as settings
 
 
 class World:
@@ -16,7 +17,7 @@ class World:
         __entities (list[Entity]): A list of all entities present in the world.
     """
 
-    def __init__(self, height=10, width=10):
+    def __init__(self):
         """
         Initializes the game world with a specified height and width.
 
@@ -25,8 +26,8 @@ class World:
             width (int, optional): The width of the world. Defaults to 10.
         """
         self.__world: list[list[str]] = []
-        self.__height: int = height
-        self.__width: int = width
+        self.__height: int = settings.HEIGTH
+        self.__width: int = settings.WIDTH
         self.__entities: list[Entity] = []
 
         self.__make_world()
