@@ -54,10 +54,23 @@ Cela produit :
 
 ---
 
+## ▶ Lancer l'IA
+
+```bash
+python snake --load <chemin_q_table> [-n <nombre>] [--visual]
+```
+
+- `--load` : Pour charger le fichier contenant la Q-table  
+- `-n` : Pour lui faire jouer plusieurs parties (optionnel)  
+- `--visual` : Pour afficher le visuel dans le terminal (optionnel)
+
+---
+
 ## 🔁 Rejouer une partie
 
 Le système de replay lit un fichier `.json` contenant les états, actions et résultats.
 
 ```bash
-python -m ai.replay
+python -m ai.replay [number]
 ```
+- `[number]` : Pour regarder un épisode en particulier
