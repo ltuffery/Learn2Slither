@@ -10,7 +10,7 @@ class Entity(ABC):
         __y (int): The Y-coordinate of the entity.
     """
 
-    def __init__(self, x: int, y: int):
+    def __init__(self):
         """
         Initializes an entity with specified coordinates.
 
@@ -18,8 +18,8 @@ class Entity(ABC):
             x (int): The X-coordinate of the entity.
             y (int): The Y-coordinate of the entity.
         """
-        self.__x = x
-        self.__y = y
+        self.__x = 0
+        self.__y = 0
 
     def get_x(self) -> int:
         """

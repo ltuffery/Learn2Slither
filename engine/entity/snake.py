@@ -22,7 +22,7 @@ class Snake(Entity):
             The last movement direction of the snake.
     """
 
-    def __init__(self, world: World, x: int, y: int, direction: Direction):
+    def __init__(self, world: World):
         """
         Initializes a snake in the given world at a specific position and
         direction.
@@ -33,13 +33,14 @@ class Snake(Entity):
             y (int): The initial Y position of the snake's head.
             direction (Direction): The initial movement direction of the snake.
         """
-        super().__init__(x, y)
+        super().__init__()
 
         self.__body: deque[tuple[int, int]] = deque()
         self.__world: World = world
-        self.__last_direction: Direction = direction
+        self.__last_direction: Direction = random.choice(list(Direction))
 
-        dir_x, dir_y = direction.value
+        dir_x, dir_y = self.__last_direction.value
+        x, y = self.get_position()
 
         # Create the initial body of the snake (3 segments)
         for _ in range(3):

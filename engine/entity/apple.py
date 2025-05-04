@@ -26,7 +26,7 @@ class Apple(Entity):
         __apple_type (AppleType): The type of the apple (RED or GREEN).
     """
 
-    def __init__(self, world: World, x: int, y: int, apple_type: AppleType):
+    def __init__(self, world: World, apple_type: AppleType):
         """
         Initializes the apple with a given type and position.
 
@@ -36,7 +36,7 @@ class Apple(Entity):
             y (int): The Y-coordinate of the apple's initial position.
             apple_type (AppleType): The type of apple (red or green).
         """
-        super().__init__(x, y)
+        super().__init__()
         self.__world = world
         self.__apple_type = apple_type
 
