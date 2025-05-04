@@ -4,7 +4,7 @@ import csv
 import engine.settings as settings
 from engine.exception.gameover import GameOver
 import ai.replay as replay
-from ai.utils import get_Q, action 
+from ai.utils import get_Q, action
 
 # Exploration rate
 EPSILON = settings.EPSILON

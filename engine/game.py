@@ -1,7 +1,6 @@
 from engine.world import World
 from engine.entity.snake import Snake
 from engine.entity.apple import Apple, AppleType
-from engine.direction import Direction
 
 
 class Game:
@@ -33,12 +32,12 @@ class Game:
         (one green and one red) at the starting position (0, 0).
         """
         self.__world = World()
-        self.__snake = Snake(self.__world, 0, 0, Direction.EAST)
+        self.__snake = Snake(self.__world)
 
         self.__world.spawn_entity(self.__snake)
-        self.__world.spawn_entity(Apple(self.__world, 0, 0, AppleType.GREEN))
-        self.__world.spawn_entity(Apple(self.__world, 0, 0, AppleType.GREEN))
-        self.__world.spawn_entity(Apple(self.__world, 0, 0, AppleType.RED))
+        self.__world.spawn_entity(Apple(self.__world, AppleType.GREEN))
+        self.__world.spawn_entity(Apple(self.__world, AppleType.GREEN))
+        self.__world.spawn_entity(Apple(self.__world, AppleType.RED))
 
     def get_snake(self) -> Snake:
         """
@@ -69,8 +68,11 @@ class Game:
             body (list[tuple[int, int]]): A list of (x, y) tuples representing
                                           the snake's body segments.
         """
-        self.__snake = Snake(self.__world, head[0], head[1], Direction.EAST)
+        self.__snake = Snake(self.__world)
+        self.__snake.set_x(head[0])
+        self.__snake.set_y(head[1])
         self.__snake.set_body(body)
+
         self.__world.add_entity(self.__snake)
 
     def set_apples(self, apples: list[tuple[int, int, bool]]) -> None:
@@ -86,7 +88,9 @@ class Game:
         """
         for apple in apples:
             apple_type = AppleType.GREEN if apple[2] else AppleType.RED
+            apple_obj = Apple(self.__world, apple_type)
 
-            self.__world.add_entity(
-                Apple(self.__world, apple[0], apple[1], apple_type)
-            )
+            apple_obj.set_x(apple[0])
+            apple_obj.set_y(apple[1])
+
+            self.__world.add_entity(apple_obj)

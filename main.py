@@ -9,13 +9,12 @@ import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 world = World()
-snake = Snake(world, 5, 5, Direction.SOUTH)
-green_apple = Apple(world, 2, 2, AppleType.GREEN)
-red_apple = Apple(world, 2, 2, AppleType.RED)
+snake = Snake(world)
 
 world.spawn_entity(snake)
-world.spawn_entity(green_apple)
-world.spawn_entity(red_apple)
+world.spawn_entity(Apple(world, AppleType.GREEN))
+world.spawn_entity(Apple(world, AppleType.GREEN))
+world.spawn_entity(Apple(world, AppleType.RED))
 
 while True:
     world.render()
