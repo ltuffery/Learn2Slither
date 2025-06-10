@@ -31,7 +31,7 @@ def progress_bar(i: int) -> None:
         print("")
 
 
-def train() -> None:
+def train(filename: str) -> None:
     """
     Trains the snake agent using Q-learning.
 
@@ -45,7 +45,7 @@ def train() -> None:
     all_action: list[list] = list()
 
     # Create rewards log file
-    with open("data/rewards.csv", "w", newline="") as file:
+    with open(f"data/{filename}.csv", "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["Total_Reward"])
 
@@ -97,6 +97,5 @@ def train() -> None:
             for (state, a), q_value in Q.items():
                 writer.writerow([state, list(Direction)[a].name, q_value])
 
-
-# Start training when this script is run
-train()
+if __name__ == "__main__":
+    train("rewards")

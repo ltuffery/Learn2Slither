@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     # Command: train
     train_parser = subparsers.add_parser("train", help="Train new AI and save progress")
-    train_parser.add_argument("file", help="Path to save training results")
+    train_parser.add_argument("filename", help="Path to save training results")
     train_parser.add_argument("--visual", action="store_true", help="Enable visual display")
 
     args = parser.parse_args()
@@ -33,4 +33,4 @@ if __name__ == "__main__":
     elif args.command == "replay":
         replay.play_replay(args.file, args.episode)
     elif args.command == "train":
-        train.train()
+        train.train(args.filename)
