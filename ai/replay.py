@@ -68,13 +68,13 @@ def create_replay():
         json.dump(replay_storage, f)
 
 
-def play_replay(ep: int = -1):
+def play_replay(replay_file: str, ep: int = -1):
     """
     Loads and replays the recorded gameplay from the JSON file.
 
     Renders each step of each episode with a short delay to simulate playback.
     """
-    with open("replay/replay.json", "r") as f:
+    with open(replay_file, "r") as f:
         all_replay = json.load(f)
 
     if ep > -1:

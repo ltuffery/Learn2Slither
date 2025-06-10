@@ -1,145 +1,36 @@
 #!/bin/python3
 
-from argparse import ArgumentParser
-import csv
-import time
-import numpy as np
-import random
-from engine.direction import Direction
-from engine.game import Game
-from ai.utils import action
-
-EXPLO = 0.0
-Q = {}
-past_configs = set()
-loop_threshold = 15
-loop_counter = 0
-
-def serialize_snake_state(snake, action):
-    """
-    Serialize the snake's state for loop detection.
-
-    Args:
-        snake: The current snake instance.
-        action: The last action taken.
-
-    Returns:
-        tuple: A unique representation of the snake's state.
-    """
-    head = (snake.get_x(), snake.get_y())
-    body = tuple(snake.get_body())
-    return (head, body, action)
-
-
-def detect_loop(snake, action):
-    """
-    Detects if the snake is in a repeating loop.
-
-    Args:
-        snake: The current snake instance.
-        action: The last action taken.
-
-    Returns:
-        bool: True if a loop is detected, False otherwise.
-    """
-    global loop_counter
-
-    config = serialize_snake_state(snake, action)
-
-    if config in past_configs:
-        loop_counter += 1
-    else:
-        loop_counter = 0
-        past_configs.add(config)
-
-    return loop_counter > loop_threshold
-
-
-def break_loop(snake, world, current_direction):
-    """
-    Tries to escape a detected loop by choosing a safe direction.
-
-    Args:
-        snake: The current snake instance.
-        world: The game world.
-        current_direction: The index of the current direction.
-
-    Returns:
-        Direction: A safe direction to break the loop.
-    """
-    safe_directions = []
-
-    for d in Direction:
-        if d == list(Direction)[current_direction]:
-            continue
-
-        nx = snake.get_x() + d.value[0]
-        ny = snake.get_y() + d.value[1]
-
-        if (nx, ny) not in world.get_empty_locations():
-            safe_directions.append(d)
-
-    if safe_directions:
-        return random.choice(safe_directions)
-
-    return list(Direction)[current_direction].opposite()
-
-def load_Q():
-    with open(args.load, "r") as file:
-        data = csv.DictReader(file)
-
-        for row in data:
-            state = eval(row['State'])
-            a = Direction[row['Action']].index
-
-            Q[(state, a)] = float(row['Q_Value'])
+import argparse
+import ai.play as play
+import ai.replay as replay
+import ai.train as train
 
 if __name__ == "__main__":
-    parser = ArgumentParser("snake")
+    parser = argparse.ArgumentParser(description="Snake AI utility script")
+    subparsers = parser.add_subparsers(dest="command", required=True)
 
-    parser.add_argument("-l", "--load")
-    parser.add_argument("-n", "--number", type=int)
-    parser.add_argument("--visual", action='store_true')
+    # Command: load
+    load_parser = subparsers.add_parser("load", help="Load and run saved AI")
+    load_parser.add_argument("file", help="Path to saved AI file")
+    load_parser.add_argument("-n", type=int, default=1, help="Number of simulations")
+    load_parser.add_argument("--visual", action="store_true", help="Enable visual display")
+
+    # Command: replay
+    replay_parser = subparsers.add_parser("replay", help="Replay from saved replay file")
+    replay_parser.add_argument("file", help="Path to replay file")
+    replay_parser.add_argument("episode", help="Path to replay file", default=-1)
+
+    # Command: train
+    train_parser = subparsers.add_parser("train", help="Train new AI and save progress")
+    train_parser.add_argument("filename", help="Path to save training results")
+    train_parser.add_argument("--visual", action="store_true", help="Enable visual display")
 
     args = parser.parse_args()
 
-    n = 1
-
-    if args.number:
-        n = int(args.number)
-
-    if args.load is not None:
-        load_Q()
-
-        sizes = []
-
-        for i in range(n):
-            isLast = False
-            game = Game()
-            past_configs.clear()
-            loop_counter = 0
-
-            game.start()
-
-            snake = game.get_snake()
-
-            while not isLast:
-                s = snake.get_state()
-                a = action(Q, s, EXPLO)
-
-                if detect_loop(snake, a):
-                    a = break_loop(snake, game.get_world(), a).index
-
-                try:
-                    r = snake.move(list(Direction)[a])
-                except:
-                    isLast = True
-
-                if args.visual:
-                    game.get_world().render()
-                    time.sleep(0.3)
-
-            sizes.append(snake.get_size())
-            print(f"[{i + 1}] size : {snake.get_size()}")
-
-        print(f"Size Avarage {np.average(sizes)}")
+    if args.command == "load":
+        size = play.play(args.file, args.visual)
+        print(f"Final size : {size}")
+    elif args.command == "replay":
+        replay.play_replay(args.file, args.episode)
+    elif args.command == "train":
+        train.train(args.filename)

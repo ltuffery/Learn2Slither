@@ -43,12 +43,12 @@ python main.py
 L'entraînement utilise l'algorithme Q-Learning avec une table `Q[(state, action)]` :
 
 ```bash
-python -m ai.train
+python snake train <filename> [--visual]
 ```
 
 Cela produit :
 
-- `data/q_table.csv` : la Q-table sauvegardée
+- `data/{filename}.csv` : la Q-table sauvegardée
 - `data/rewards.csv` : les récompenses par épisode
 - `replay/replay.json` : l'historique d'une partie
 
@@ -57,7 +57,7 @@ Cela produit :
 ## ▶ Lancer l'IA
 
 ```bash
-python snake --load <chemin_q_table> [-n <nombre>] [--visual]
+python snake load <chemin_q_table> [-n <nombre>] [--visual]
 ```
 
 - `--load` : Pour charger le fichier contenant la Q-table  
@@ -71,6 +71,6 @@ python snake --load <chemin_q_table> [-n <nombre>] [--visual]
 Le système de replay lit un fichier `.json` contenant les états, actions et résultats.
 
 ```bash
-python -m ai.replay [number]
+python replay <chemin_replay> [episode]
 ```
-- `[number]` : Pour regarder un épisode en particulier
+- `[episode]` : Pour regarder un épisode en particulier sinon ca les lances tous
