@@ -45,7 +45,7 @@ def train(filename: str) -> None:
     all_action: list[list] = list()
 
     # Create rewards log file
-    with open(f"data/{filename}.csv", "w", newline="") as file:
+    with open("data/rewards.csv", "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["Total_Reward"])
 
@@ -90,7 +90,7 @@ def train(filename: str) -> None:
 
         replay.create_replay()
         # Save Q-table to CSV
-        with open("data/q_table.csv", "w", newline="") as f:
+        with open(f"data/{filename}.csv", "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(["State", "Action", "Q_Value"])
 
