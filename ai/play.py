@@ -1,6 +1,5 @@
 import csv
 import time
-import numpy as np
 import random
 from engine.direction import Direction
 from engine.game import Game

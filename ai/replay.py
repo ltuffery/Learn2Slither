@@ -5,6 +5,7 @@ from engine.direction import Direction
 import json
 import time
 import sys
+import os
 
 # Global storage for recorded gameplay
 replay_storage = []
@@ -29,13 +30,14 @@ def reset_replay():
 
 def save_game_state(game: Game, direction: Direction):
     """
-    Captures and stores the current game state along with the snake's
-    direction.
+    Save the current game state along with the snake's direction.
+
+    Captures the snake's head position, body, and all apples on the map,
+    including their color, and appends this data to the global replay log.
 
     Args:
         game (Game): The current game instance to record.
-        direction (Direction): The direction in which the snake is currently
-        moving.
+        direction (Direction): The current direction of the snake.
     """
     global replay_data
 
@@ -56,15 +58,21 @@ def save_game_state(game: Game, direction: Direction):
     replay_data.append(data)
 
 
-def create_replay():
+def create_replay(filename: str):
     """
-    Saves the entire replay storage to a JSON file for later playback.
+    Save the full replay data to a JSON file for future playback.
 
-    The replay is saved to "replay/replay.json".
+    The file is stored in the "replay" directory using the given filename.
+
+    Args:
+        filename (str): Name of the output JSON file (without extension).
     """
     global replay_storage
 
-    with open("replay/replay.json", "w") as f:
+    if not os.path.exists("replay"):
+        os.makedirs("replay")
+
+    with open(f"replay/{filename}.json", "w") as f:
         json.dump(replay_storage, f)
 
 

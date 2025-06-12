@@ -88,7 +88,7 @@ def train(filename: str) -> None:
             EPSILON *= settings.EPSILON_DECAY
             EPSILON = max(EPSILON, settings.EPSILON_MIN)
 
-        replay.create_replay()
+        replay.create_replay("train_replay")
         # Save Q-table to CSV
         with open(f"data/{filename}.csv", "w", newline="") as f:
             writer = csv.writer(f)
