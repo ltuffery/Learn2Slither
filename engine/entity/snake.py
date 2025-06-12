@@ -154,16 +154,6 @@ class Snake(Entity):
 
         return apple.get_reward()
 
-    def size(self) -> int:
-        """
-        Returns the total size of the snake, including the head and body
-        segments.
-
-        Returns:
-            int: The total number of segments in the snake.
-        """
-        return len(self.__body) + 1
-
     def get_state_at(self, x: int, y: int) -> str | None:
         """
         Returns the state of a given position in the game world.
