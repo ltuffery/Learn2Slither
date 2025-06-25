@@ -71,6 +71,6 @@ python snake load <chemin_q_table> [-n <nombre>] [--visual]
 Le système de replay lit un fichier `.json` contenant les états, actions et résultats.
 
 ```bash
-python replay <chemin_replay> [episode]
+python snake replay <chemin_replay> [episode]
 ```
 - `[episode]` : Pour regarder un épisode en particulier sinon ca les lances tous
