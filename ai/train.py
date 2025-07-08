@@ -72,9 +72,7 @@ def train(filename: str) -> None:
                 # Q-learning update rule
                 next_action = max(range(4), key=lambda a: get_Q(Q, s_next, a))
                 next_q = get_Q(Q, s_next, next_action)
-                Q[(tuple(s), a)] = get_Q(Q, s, a) + settings.ALPHA * (
-                    r + settings.GAMMA * next_q - get_Q(Q, s, a)
-                )
+                Q[(tuple(s), a)] = (1 - settings.ALPHA) * get_Q(Q, s, a) + settings.ALPHA * (r + settings.GAMMA * next_q)
 
                 if r > 0:
                     total_reward += 1

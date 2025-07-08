@@ -14,7 +14,7 @@ def get_Q(Q: dict, state: list[bool], action: int) -> float:
     Returns:
         float: The Q-value for the given pair, or 0.0 if not yet defined.
     """
-    return Q.get((tuple(state), action), 0.0)
+    return Q.get((tuple(state), action), 10.0)
 
 
 def action(Q: dict, state: list[bool], explo: float) -> int:
