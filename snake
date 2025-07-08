@@ -18,7 +18,7 @@ if __name__ == "__main__":
     # Command: replay
     replay_parser = subparsers.add_parser("replay", help="Replay from saved replay file")
     replay_parser.add_argument("file", help="Path to replay file")
-    replay_parser.add_argument("episode", help="Path to replay file", default=-1)
+    replay_parser.add_argument("episode", type=int, help="Path to replay file", default=-1)
 
     # Command: train
     train_parser = subparsers.add_parser("train", help="Train new AI and save progress")
@@ -28,8 +28,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == "load":
-        size = play.play(args.file, args.visual)
-        print(f"Final size : {size}")
+        for i in range(args.n):
+            size = play.play(args.file, args.visual)
+
+            print(f"[{i + 1}] Final size : {size}")
     elif args.command == "replay":
         replay.play_replay(args.file, args.episode)
     elif args.command == "train":

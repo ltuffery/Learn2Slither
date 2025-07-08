@@ -93,16 +93,15 @@ def load_Q(f):
 def play(q_file: str, visual: bool) -> int:
     load_Q(q_file)
 
-    isLast = False
+    is_last = False
     game = Game()
     past_configs.clear()
-    loop_counter = 0
 
     game.start()
 
     snake = game.get_snake()
 
-    while not isLast:
+    while not is_last:
         s = snake.get_state()
         a = action(Q, s, 0.0)
 
@@ -112,7 +111,7 @@ def play(q_file: str, visual: bool) -> int:
         try:
             snake.move(list(Direction)[a])
         except:
-            isLast = True
+            is_last = True
 
         if visual:
             game.get_world().render()
