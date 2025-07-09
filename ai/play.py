@@ -90,7 +90,7 @@ def load_Q(f):
 
             Q[(state, a)] = float(row['Q_Value'])
 
-def play(q_file: str, visual: bool) -> int:
+def play(q_file: str, visual: bool, step: bool) -> int:
     load_Q(q_file)
 
     is_last = False
@@ -113,8 +113,12 @@ def play(q_file: str, visual: bool) -> int:
         except:
             is_last = True
 
-        if visual:
+        if visual or step:
             game.get_world().render()
-            time.sleep(0.3)
+
+            if not step:
+                time.sleep(0.3)
+            elif not is_last:
+                input("Press enter to continue...")
 
     return snake.get_size()

@@ -15,6 +15,7 @@ if __name__ == "__main__":
     load_parser.add_argument("file", help="Path to saved AI file")
     load_parser.add_argument("-n", type=int, default=1, help="Number of simulations")
     load_parser.add_argument("--visual", action="store_true", help="Enable visual display")
+    load_parser.add_argument("--step", action="store_true", help="Enable step by step")
 
     # Command: replay
     replay_parser = subparsers.add_parser("replay", help="Replay from saved replay file")
@@ -31,7 +32,7 @@ if __name__ == "__main__":
     if args.command == "load":
         sizes = []
         for i in range(args.n):
-            sizes.append(play.play(args.file, args.visual))
+            sizes.append(play.play(args.file, args.visual, args.step))
 
             print(f"[{i + 1}] Final size : {sizes[i]}")
 

@@ -12,7 +12,7 @@ def get_Q(Q: dict, state: list[bool], action: int) -> float:
         action (int): The action index (0 to 3, representing directions).
 
     Returns:
-        float: The Q-value for the given pair, or 0.0 if not yet defined.
+        float: The Q-value for the given pair, or 10.0 if not yet defined.
     """
     return Q.get((tuple(state), action), 10.0)
 
