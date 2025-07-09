@@ -50,7 +50,7 @@ def train(filename: str) -> None:
         writer.writerow(["Total_Reward"])
 
         for i in range(settings.EPISODES):
-            isLast = False
+            is_last = False
             env.start()
             snake = env.get_snake()
             s = snake.get_state()
@@ -58,12 +58,12 @@ def train(filename: str) -> None:
             all_action.append(list())
             replay.reset_replay()
 
-            while not isLast:
+            while not is_last:
                 a = action(Q, s, EPSILON)
                 try:
                     r = snake.move(list(Direction)[a])
                 except GameOver:
-                    isLast = True
+                    is_last = True
                     r = settings.GAMEOVER_REWARD  # Penalty for dying
 
                 replay.save_game_state(env, list(Direction)[a])
@@ -81,7 +81,7 @@ def train(filename: str) -> None:
 
             progress_bar(i + 1)
 
-            writer.writerow([total_reward])
+            writer.writerow([snake.get_size()])
 
             EPSILON *= settings.EPSILON_DECAY
             EPSILON = max(EPSILON, settings.EPSILON_MIN)
