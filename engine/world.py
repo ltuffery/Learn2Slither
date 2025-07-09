@@ -171,6 +171,8 @@ class World:
         """
         Renders the current state of the world to the terminal.
         """
+        from engine.entity.snake import Snake
+
         sys.stdout.write("\033[H")  # Moves cursor to the top-left
         sys.stdout.write("\033[J")  # Clears the terminal
 
@@ -181,7 +183,10 @@ class World:
                 world[position[2]][position[1]] = position[0]
 
         print(title)
-        for line in world:
-            print("".join(line))
+        snake = [entity for entity in self.__entities if isinstance(entity, Snake)][0]
+        # print(snake.get_size())
+        for i in range(len(world)):
+            snake_see = "".join((lambda it: ' ' if it is None else it)(item) for item in snake.see()[i])
+            print("".join(world[i]) + "   " + snake_see)
 
         sys.stdout.flush()
