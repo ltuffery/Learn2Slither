@@ -96,7 +96,6 @@ def play_replay(replay_file: str, ep: int = -1):
         for replay in episode:
             game = Game()
 
-            print(replay)
             game.set_snake(replay["head"], replay["body"])
             game.set_apples(replay["apples"])
 
