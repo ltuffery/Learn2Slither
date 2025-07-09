@@ -184,7 +184,7 @@ class World:
 
         print(title)
         snake = [entity for entity in self.__entities if isinstance(entity, Snake)][0]
-        # print(snake.get_size())
+
         for i in range(len(world)):
             snake_see = "".join((lambda it: ' ' if it is None else it)(item) for item in snake.see()[i])
             print("".join(world[i]) + "   " + snake_see)
