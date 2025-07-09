@@ -30,13 +30,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == "load":
+        if args.n < 1:
+            print("Number of simulations must be greater than 0")
+            exit(1)
+
         sizes = []
         for i in range(args.n):
             try:
                 sizes.append(play.play(args.file, args.visual, args.step))
             except FileNotFoundError:
                 print("{} not found".format(args.file))
-                exit(0)
+                exit(1)
 
             print(f"[{i + 1}] Final size : {sizes[i]}")
 
@@ -46,8 +50,10 @@ if __name__ == "__main__":
             replay.play_replay(args.file, args.episode)
         except FileNotFoundError:
             print("{} not found".format(args.file))
+            exit(1)
     elif args.command == "train":
         try:
             train.train(args.filename)
         except FileNotFoundError:
             print("{}.csv not access".format(args.filename))
+            exit(1)
