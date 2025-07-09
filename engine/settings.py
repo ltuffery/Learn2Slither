@@ -16,7 +16,7 @@ EPISODES = 2000
 ALPHA = 0.1
 GAMMA = 1
 EPSILON = 1.0  # 1.0 == 100%
-EPSILON_DECAY = 0.6  # Set 1.0 for an EPSILON strategy
+EPSILON_DECAY = 0.995  # Set 1.0 for an EPSILON strategy
 EPSILON_MIN = 0.01
 
 # World
