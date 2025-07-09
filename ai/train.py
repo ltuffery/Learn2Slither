@@ -46,49 +46,49 @@ def train(filename: str) -> None:
 
     # Create rewards log file
     with open("data/rewards.csv", "w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Total_Reward"])
-
-        for i in range(settings.EPISODES):
-            is_last = False
-            env.start()
-            snake = env.get_snake()
-            s = snake.get_state()
-            total_reward = 0
-            all_action.append(list())
-            replay.reset_replay()
-
-            while not is_last:
-                a = action(Q, s, EPSILON)
-                try:
-                    r = snake.move(list(Direction)[a])
-                except GameOver:
-                    is_last = True
-                    r = settings.GAMEOVER_REWARD  # Penalty for dying
-
-                replay.save_game_state(env, list(Direction)[a])
-                s_next = snake.get_state()
-
-                # Q-learning update rule
-                next_action = max(range(4), key=lambda a: get_Q(Q, s_next, a))
-                next_q = get_Q(Q, s_next, next_action)
-                Q[(tuple(s), a)] = (1 - settings.ALPHA) * get_Q(Q, s, a) + settings.ALPHA * (r + settings.GAMMA * next_q)
-
-                if r > 0:
-                    total_reward += 1
-                s = s_next
-                all_action[i].append(tuple(s))
-
-            progress_bar(i + 1)
-
-            writer.writerow([snake.get_size()])
-
-            EPSILON *= settings.EPSILON_DECAY
-            EPSILON = max(EPSILON, settings.EPSILON_MIN)
-
-        replay.create_replay("train_replay")
-        # Save Q-table to CSV
         with open(f"data/{filename}.csv", "w", newline="") as f:
+            writer = csv.writer(file)
+            writer.writerow(["Total_Reward"])
+
+            for i in range(settings.EPISODES):
+                is_last = False
+                env.start()
+                snake = env.get_snake()
+                s = snake.get_state()
+                total_reward = 0
+                all_action.append(list())
+                replay.reset_replay()
+
+                while not is_last:
+                    a = action(Q, s, EPSILON)
+                    try:
+                        r = snake.move(list(Direction)[a])
+                    except GameOver:
+                        is_last = True
+                        r = settings.GAMEOVER_REWARD  # Penalty for dying
+
+                    replay.save_game_state(env, list(Direction)[a])
+                    s_next = snake.get_state()
+
+                    # Q-learning update rule
+                    next_action = max(range(4), key=lambda a: get_Q(Q, s_next, a))
+                    next_q = get_Q(Q, s_next, next_action)
+                    Q[(tuple(s), a)] = (1 - settings.ALPHA) * get_Q(Q, s, a) + settings.ALPHA * (r + settings.GAMMA * next_q)
+
+                    if r > 0:
+                        total_reward += 1
+                    s = s_next
+                    all_action[i].append(tuple(s))
+
+                progress_bar(i + 1)
+
+                writer.writerow([snake.get_size()])
+
+                EPSILON *= settings.EPSILON_DECAY
+                EPSILON = max(EPSILON, settings.EPSILON_MIN)
+
+            replay.create_replay("train_replay")
+
             writer = csv.writer(f)
             writer.writerow(["State", "Action", "Q_Value"])
 
