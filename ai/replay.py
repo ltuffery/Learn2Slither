@@ -85,23 +85,18 @@ def play_replay(replay_file: str, ep: int = -1):
     with open(replay_file, "r") as f:
         all_replay = json.load(f)
 
-    if ep > -1:
-        for replay in all_replay[ep]:
-            game = Game()
-
-            game.set_snake(replay["head"], replay["body"])
-            game.set_apples(replay["apples"])
-
-            title = f"Episode {str(ep)}\n\n{replay['direction']}"
-
-            game.get_world().render(title)
-            time.sleep(0.3)
+    if ep - 1 >= len(all_replay):
+        print("Episode {} out of {}".format(ep, len(all_replay)))
         return
+
+    if ep > 0:
+        all_replay = [all_replay[ep - 1]]
 
     for i, episode in enumerate(all_replay):
         for replay in episode:
             game = Game()
 
+            print(replay)
             game.set_snake(replay["head"], replay["body"])
             game.set_apples(replay["apples"])
 
@@ -109,13 +104,3 @@ def play_replay(replay_file: str, ep: int = -1):
 
             game.get_world().render(title)
             time.sleep(0.3)
-
-
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        try:
-            play_replay(int(sys.argv[1]))
-        except ValueError:
-            print("Bad argument")
-    else:
-        play_replay()

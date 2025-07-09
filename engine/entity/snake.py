@@ -151,6 +151,13 @@ class Snake(Entity):
             self.__body.pop()
 
         apple.consume()
+        r = apple.get_reward()
+
+        if r > 0 and self.get_size() >= 30:
+            return r + 15
+
+        if r > 0 and self.get_size() % 5:
+            return r + 5
 
         return apple.get_reward()
 
