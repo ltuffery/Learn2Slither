@@ -11,6 +11,7 @@ from engine.exception.gameover import GameOver
 from engine.entity.snake import Snake
 from engine.entity.apple import Apple, AppleType
 
+
 def play_mode():
     world = World()
     snake = Snake(world)
@@ -45,27 +46,40 @@ def play_mode():
             print("Game Over")
             break
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Snake AI utility script")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # Command: load
-    load_parser = subparsers.add_parser("load", help="Load and run saved AI")
-    load_parser.add_argument("file", help="Path to saved AI file")
-    load_parser.add_argument("-n", type=int, default=1, help="Number of simulations")
-    load_parser.add_argument("--visual", action="store_true", help="Enable visual display")
-    load_parser.add_argument("--step", action="store_true", help="Enable step by step")
+    load_parser = subparsers.add_parser("load",
+                                        help="Load and run saved AI")
+    load_parser.add_argument("file",
+                             help="Path to saved AI file")
+    load_parser.add_argument("-n", type=int, default=1,
+                             help="Number of simulations")
+    load_parser.add_argument("--visual", action="store_true",
+                             help="Enable visual display")
+    load_parser.add_argument("--step", action="store_true",
+                             help="Enable step by step")
 
     # Command: replay
-    replay_parser = subparsers.add_parser("replay", help="Replay from saved replay file")
-    replay_parser.add_argument("file", help="Path to replay file")
-    replay_parser.add_argument("episode", type=int, help="Path to replay file", default=-1)
-    replay_parser.add_argument("--step", action="store_true", help="Enable step by step")
+    replay_parser = subparsers.add_parser("replay",
+                                          help="Replay from saved replay file")
+    replay_parser.add_argument("file",
+                               help="Path to replay file")
+    replay_parser.add_argument("episode", type=int,
+                               help="Path to replay file", default=-1)
+    replay_parser.add_argument("--step", action="store_true",
+                               help="Enable step by step")
 
     # Command: train
-    train_parser = subparsers.add_parser("train", help="Train new AI and save progress")
-    train_parser.add_argument("filename", help="Path to save training results")
-    train_parser.add_argument("--visual", action="store_true", help="Enable visual display")
+    train_parser = subparsers.add_parser("train",
+                                         help="Train new AI and save progress")
+    train_parser.add_argument("filename",
+                              help="Path to save training results")
+    train_parser.add_argument("--visual", action="store_true",
+                              help="Enable visual display")
 
     # Command: play
     train_parser = subparsers.add_parser("play", help="Play a game")
@@ -87,7 +101,7 @@ if __name__ == "__main__":
 
             print(f"[{i + 1}] Final size : {sizes[i]}")
 
-        print(f"\nSize mean: {np.mean(sizes)}")
+        print(f"\nSize mean: {np.mean(sizes)}, Max length: {np.max(sizes)}")
     elif args.command == "replay":
         try:
             replay.play_replay(args.file, args.episode, args.step)

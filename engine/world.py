@@ -182,14 +182,19 @@ class World:
             for position in entity.render():
                 world[position[2]][position[1]] = position[0]
 
-        snake = [entity for entity in self.__entities if isinstance(entity, Snake)][0]
+        snake = [e for e in self.__entities if isinstance(e, Snake)][0]
 
         if title is not None:
             print(title + "\n\n")
 
+        def str_see(it):
+            return ' ' if it is None else it
+
         print(snake.get_last_direction().name)
         for i in range(len(world)):
-            snake_see = "".join((lambda it: ' ' if it is None else it)(item) for item in snake.see()[i])
+            snake_see = "".join(
+                str_see(item) for item in snake.see()[i]
+            )
             print("".join(world[i]) + "   " + snake_see)
 
         sys.stdout.flush()

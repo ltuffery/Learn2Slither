@@ -45,7 +45,7 @@ def train(filename: str) -> None:
     all_action: list[list] = list()
 
     # Create rewards log file
-    with open("data/sizes.csv", "w", newline="") as file:
+    with (open("data/sizes.csv", "w", newline="") as file):
         with open(f"data/{filename}.csv", "w", newline="") as f:
             writer = csv.writer(file)
             writer.writerow(["Total_Size"])
@@ -70,9 +70,13 @@ def train(filename: str) -> None:
                     s_next = snake.get_state()
 
                     # Q-learning update rule
-                    next_action = max(range(4), key=lambda a: get_Q(Q, s_next, a))
+                    next_action = max(
+                        range(4),
+                        key=lambda a: get_Q(Q, s_next, a)
+                    )
                     next_q = get_Q(Q, s_next, next_action)
-                    Q[(tuple(s), a)] = (1 - settings.ALPHA) * get_Q(Q, s, a) + settings.ALPHA * (r + settings.GAMMA * next_q)
+                    Q[(tuple(s), a)] = (1 - settings.ALPHA) * get_Q(Q, s, a)
+                    + settings.ALPHA * (r + settings.GAMMA * next_q)
 
                     s = s_next
                     all_action[i].append(tuple(s))
@@ -91,6 +95,7 @@ def train(filename: str) -> None:
 
             for (state, a), q_value in Q.items():
                 writer.writerow([state, list(Direction)[a].name, q_value])
+
 
 if __name__ == "__main__":
     train("train")

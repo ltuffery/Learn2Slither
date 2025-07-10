@@ -3,6 +3,7 @@ import time
 import random
 from engine.direction import Direction
 from engine.game import Game
+from engine.exception.gameover import GameOver
 from ai.utils import action
 
 
@@ -10,6 +11,7 @@ Q = {}
 past_configs = set()
 loop_threshold = 15
 loop_counter = 0
+
 
 def serialize_snake_state(snake, action):
     """
@@ -80,6 +82,7 @@ def break_loop(snake, world, current_direction):
 
     return list(Direction)[current_direction].opposite()
 
+
 def load_Q(f):
     with open(f, "r") as file:
         data = csv.DictReader(file)
@@ -89,6 +92,7 @@ def load_Q(f):
             a = Direction[row['Action']].index
 
             Q[(state, a)] = float(row['Q_Value'])
+
 
 def play(q_file: str, visual: bool, step: bool) -> int:
     try:
@@ -114,7 +118,7 @@ def play(q_file: str, visual: bool, step: bool) -> int:
 
         try:
             snake.move(list(Direction)[a])
-        except:
+        except GameOver:
             is_last = True
 
         if visual or step:

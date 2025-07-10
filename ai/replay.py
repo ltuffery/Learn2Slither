@@ -4,7 +4,6 @@ from engine.entity.snake import Snake
 from engine.direction import Direction
 import json
 import time
-import sys
 import os
 
 # Global storage for recorded gameplay
@@ -21,7 +20,6 @@ def reset_replay():
     episode's data.
     """
     global replay_data
-    global replay_storage
 
     if len(replay_data) > 0:
         replay_storage.append(replay_data)
@@ -39,7 +37,6 @@ def save_game_state(game: Game, direction: Direction):
         game (Game): The current game instance to record.
         direction (Direction): The current direction of the snake.
     """
-    global replay_data
 
     data = {
         "direction": direction.name,
@@ -67,7 +64,6 @@ def create_replay(filename: str):
     Args:
         filename (str): Name of the output JSON file (without extension).
     """
-    global replay_storage
 
     if not os.path.exists("replay"):
         os.makedirs("replay")
