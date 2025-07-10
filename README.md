@@ -63,6 +63,7 @@ python snake load <chemin_q_table> [-n <nombre>] [--visual]
 - `--load` : Pour charger le fichier contenant la Q-table  
 - `-n` : Pour lui faire jouer plusieurs parties (optionnel)  
 - `--visual` : Pour afficher le visuel dans le terminal (optionnel)
+- - `--step` : Pour activer le step by step. Le visual mode est automatiquement activer aussi
 
 ---
 
