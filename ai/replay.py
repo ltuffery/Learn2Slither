@@ -76,7 +76,7 @@ def create_replay(filename: str):
         json.dump(replay_storage, f)
 
 
-def play_replay(replay_file: str, ep: int = -1):
+def play_replay(replay_file: str, ep: int = -1, step: bool = False):
     """
     Loads and replays the recorded gameplay from the JSON file.
 
@@ -99,7 +99,11 @@ def play_replay(replay_file: str, ep: int = -1):
             game.set_snake(replay["head"], replay["body"])
             game.set_apples(replay["apples"])
 
-            title = f"Episode {str(i)}\n\n{replay['direction']}"
+            title = f"Episode {str(i)}"
 
             game.get_world().render(title)
-            time.sleep(0.3)
+
+            if step:
+                input("Press Enter to continue...")
+            else:
+                time.sleep(0.3)

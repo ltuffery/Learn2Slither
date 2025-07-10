@@ -33,7 +33,7 @@ pip install -r requirements.txt
 ## ⚙️ Lancer le jeu (manuellement)
 
 ```bash
-python main.py
+python snake play
 ```
 
 ---

@@ -72,7 +72,7 @@ def break_loop(snake, world, current_direction):
         nx = snake.get_x() + d.value[0]
         ny = snake.get_y() + d.value[1]
 
-        if (nx, ny) not in world.get_empty_locations():
+        if (nx, ny) in world.get_empty_locations():
             safe_directions.append(d)
 
     if safe_directions:

@@ -38,6 +38,7 @@ class Snake(Entity):
         self.__body: deque[tuple[int, int]] = deque()
         self.__world: World = world
         self.__last_direction: Direction = random.choice(list(Direction))
+        self.__is_dead: bool = False
 
         dir_x, dir_y = self.__last_direction.value
         x, y = self.get_position()
@@ -107,6 +108,7 @@ class Snake(Entity):
         info = self.__world.get_location(new_x, new_y)
 
         if info.is_wall() or (new_x, new_y) in self.__body:
+            self.__is_dead = True
             raise GameOver("End game")
 
         if isinstance(info.get_entity(), Apple):
@@ -320,6 +322,12 @@ class Snake(Entity):
             str: A string representing the snake, colored in yellow.
         """
         return f"\033[33m{settings.SNAKE_HEAD_CHAR}\033[0m"
+
+    def get_last_direction(self) -> Direction:
+        return self.__last_direction
+
+    def is_dead(self) -> bool:
+        return self.__is_dead
 
     def render(self) -> list[tuple[str, int, int]]:
         """

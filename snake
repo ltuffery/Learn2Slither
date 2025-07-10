@@ -5,6 +5,45 @@ import ai.play as play
 import ai.replay as replay
 import ai.train as train
 import numpy as np
+from engine.world import World
+from engine.direction import Direction
+from engine.exception.gameover import GameOver
+from engine.entity.snake import Snake
+from engine.entity.apple import Apple, AppleType
+
+def play_mode():
+    world = World()
+    snake = Snake(world)
+
+    world.spawn_entity(snake)
+    world.spawn_entity(Apple(world, AppleType.GREEN))
+    world.spawn_entity(Apple(world, AppleType.GREEN))
+    world.spawn_entity(Apple(world, AppleType.RED))
+
+    while True:
+        world.render()
+
+        try:
+            key = input("Move (W/A/S/D) : ").lower()
+        except EOFError:
+            continue
+
+        if key == 'q':
+            print('Quitting the program')
+            break
+
+        try:
+            if key == 'w':
+                snake.move(Direction.NORTH)
+            elif key == 's':
+                snake.move(Direction.SOUTH)
+            elif key == 'a':
+                snake.move(Direction.WEST)
+            elif key == 'd':
+                snake.move(Direction.EAST)
+        except GameOver:
+            print("Game Over")
+            break
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Snake AI utility script")
@@ -21,11 +60,15 @@ if __name__ == "__main__":
     replay_parser = subparsers.add_parser("replay", help="Replay from saved replay file")
     replay_parser.add_argument("file", help="Path to replay file")
     replay_parser.add_argument("episode", type=int, help="Path to replay file", default=-1)
+    replay_parser.add_argument("--step", action="store_true", help="Enable step by step")
 
     # Command: train
     train_parser = subparsers.add_parser("train", help="Train new AI and save progress")
     train_parser.add_argument("filename", help="Path to save training results")
     train_parser.add_argument("--visual", action="store_true", help="Enable visual display")
+
+    # Command: play
+    train_parser = subparsers.add_parser("play", help="Play a game")
 
     args = parser.parse_args()
 
@@ -47,7 +90,7 @@ if __name__ == "__main__":
         print(f"\nSize mean: {np.mean(sizes)}")
     elif args.command == "replay":
         try:
-            replay.play_replay(args.file, args.episode)
+            replay.play_replay(args.file, args.episode, args.step)
         except FileNotFoundError:
             print("{} not found".format(args.file))
             exit(1)
@@ -57,3 +100,5 @@ if __name__ == "__main__":
         except FileNotFoundError:
             print("{}.csv not access".format(args.filename))
             exit(1)
+    elif args.command == "play":
+        play_mode()
