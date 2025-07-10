@@ -45,17 +45,16 @@ def train(filename: str) -> None:
     all_action: list[list] = list()
 
     # Create rewards log file
-    with open("data/rewards.csv", "w", newline="") as file:
+    with open("data/sizes.csv", "w", newline="") as file:
         with open(f"data/{filename}.csv", "w", newline="") as f:
             writer = csv.writer(file)
-            writer.writerow(["Total_Reward"])
+            writer.writerow(["Total_Size"])
 
             for i in range(settings.EPISODES):
                 is_last = False
                 env.start()
                 snake = env.get_snake()
                 s = snake.get_state()
-                total_reward = 0
                 all_action.append(list())
                 replay.reset_replay()
 
@@ -75,8 +74,6 @@ def train(filename: str) -> None:
                     next_q = get_Q(Q, s_next, next_action)
                     Q[(tuple(s), a)] = (1 - settings.ALPHA) * get_Q(Q, s, a) + settings.ALPHA * (r + settings.GAMMA * next_q)
 
-                    if r > 0:
-                        total_reward += 1
                     s = s_next
                     all_action[i].append(tuple(s))
 
@@ -96,4 +93,4 @@ def train(filename: str) -> None:
                 writer.writerow([state, list(Direction)[a].name, q_value])
 
 if __name__ == "__main__":
-    train("rewards")
+    train("train")

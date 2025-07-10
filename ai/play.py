@@ -91,7 +91,11 @@ def load_Q(f):
             Q[(state, a)] = float(row['Q_Value'])
 
 def play(q_file: str, visual: bool, step: bool) -> int:
-    load_Q(q_file)
+    try:
+        load_Q(q_file)
+    except KeyError:
+        print("Q file format not recognized")
+        exit(1)
 
     is_last = False
     game = Game()
