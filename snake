@@ -98,6 +98,9 @@ if __name__ == "__main__":
             except FileNotFoundError:
                 print("{} not found".format(args.file))
                 exit(1)
+            except ValueError as e:
+                print(e)
+                exit(1)
 
             print(f"[{i + 1}] Final size : {sizes[i]}")
 
@@ -108,11 +111,17 @@ if __name__ == "__main__":
         except FileNotFoundError:
             print("{} not found".format(args.file))
             exit(1)
+        except ValueError as e:
+            print(e)
+            exit(1)
     elif args.command == "train":
         try:
             train.train(args.filename)
         except FileNotFoundError:
             print("{}.csv not access".format(args.filename))
+            exit(1)
+        except ValueError as e:
+            print(e)
             exit(1)
     elif args.command == "play":
         play_mode()

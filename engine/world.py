@@ -25,8 +25,11 @@ class World:
             height (int, optional): The height of the world. Defaults to 10.
             width (int, optional): The width of the world. Defaults to 10.
         """
+        if settings.HEIGHT < 3 or settings.WIDTH < 3:
+            raise ValueError("Height and width must be >= 3")
+
         self.__world: list[list[str]] = []
-        self.__height: int = settings.HEIGTH
+        self.__height: int = settings.HEIGHT
         self.__width: int = settings.WIDTH
         self.__entities: list[Entity] = []
 
