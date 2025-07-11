@@ -75,8 +75,10 @@ def train(filename: str) -> None:
                         key=lambda a: get_Q(Q, s_next, a)
                     )
                     next_q = get_Q(Q, s_next, next_action)
-                    Q[(tuple(s), a)] = (1 - settings.ALPHA) * get_Q(Q, s, a)
-                    + settings.ALPHA * (r + settings.GAMMA * next_q)
+                    invAlpha = 1 - settings.ALPHA
+                    q = get_Q(Q, s, a)
+                    tmp = (r + settings.GAMMA * next_q)
+                    Q[(tuple(s), a)] = invAlpha * q + settings.ALPHA * tmp
 
                     s = s_next
                     all_action[i].append(tuple(s))
