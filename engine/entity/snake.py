@@ -44,7 +44,7 @@ class Snake(Entity):
         x, y = self.get_position()
 
         # Create the initial body of the snake (3 segments)
-        for _ in range(3):
+        for _ in range(2):
             x += dir_x
             y += dir_y
             self.__body.append((x, y))
