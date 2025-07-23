@@ -22,7 +22,7 @@ class Game:
         The world is initialized, and the snake is set to None.
         """
         self.__world: World = World()
-        self.__snake: Snake = None
+        self.__snake: Snake = Snake(self.__world)
 
     def start(self) -> None:
         """

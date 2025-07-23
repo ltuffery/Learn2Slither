@@ -1,5 +1,7 @@
 import numpy as np
 from engine.direction import Direction
+import torch
+import torch.nn as nn
 
 
 def get_Q(Q: dict, state: list[bool], action: int) -> float:
@@ -17,27 +19,19 @@ def get_Q(Q: dict, state: list[bool], action: int) -> float:
     return Q.get((tuple(state), action), 10.0)
 
 
-def action(Q: dict, state: list[bool], explo: float) -> int:
-    """
-    Chooses an action using the epsilon-greedy strategy.
+def action(Q, state, epsilon):
+    # L'epsilon-greedy n'est plus nécessaire puisque l'on fait déjà de l'exploitation avec DQN.
+    return torch.argmax(Q(state)).item()
 
-    This function selects an action based on the current state:
-    - With a probability of `explo` (exploration rate), it chooses a random
-    action.
-    - Otherwise, it chooses the action that maximizes the Q-value for the
-    given state (exploitation).
 
-    Args:
-        Q (dict): The Q-table mapping (state, action) pairs to Q-values.
-        state (list[bool]): The current perception/state of the agent
-        (e.g., snake vision).
-        explo (float): The exploration rate (epsilon), between 0 and 1.
-
-    Returns:
-        int: The index of the selected action
-        (e.g., 0 to 3 corresponding to directions).
-    """
-    if np.random.uniform() < explo:
-        return np.random.randint(0, len(Direction))  # Exploration
-    else:
-        return max(range(4), key=lambda a: get_Q(Q, state, a))  # Exploitation
+class QNetwork(nn.Module):
+    def __init__(self, input_size, output_size):
+        super(QNetwork, self).__init__()
+        self.fc1 = nn.Linear(input_size, 128)
+        self.fc2 = nn.Linear(128, 128)
+        self.fc3 = nn.Linear(128, output_size)
+        
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        return self.fc3(x)

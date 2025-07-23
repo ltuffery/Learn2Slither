@@ -1,16 +1,26 @@
-import csv
+import torch
 import time
 import random
 from engine.direction import Direction
 from engine.game import Game
 from engine.exception.gameover import GameOver
-from ai.utils import action
+from ai.utils import QNetwork  # Assurez-vous que cette fonction est bien définie
 
 
 Q = {}
 past_configs = set()
 loop_threshold = 15
 loop_counter = 0
+
+
+def load_model(model, path):
+    try:
+        model.load_state_dict(torch.load(path))
+        model.eval()
+        # print(f"Modèle chargé depuis {path}")
+    except Exception as e:
+        print(f"Erreur lors du chargement du modèle : {e}")
+        exit(1)
 
 
 def serialize_snake_state(snake, action):
@@ -83,23 +93,21 @@ def break_loop(snake, world, current_direction):
     return list(Direction)[current_direction].opposite()
 
 
-def load_Q(f):
-    with open(f, "r") as file:
-        data = csv.DictReader(file)
+# def load_Q(f):
+#     with open(f, "r") as file:
+#         data = csv.DictReader(file)
 
-        for row in data:
-            state = eval(row['State'])
-            a = Direction[row['Action']].index
+#         for row in data:
+#             state = eval(row['State'])
+#             a = Direction[row['Action']].index
 
-            Q[(state, a)] = float(row['Q_Value'])
+#             Q[(state, a)] = float(row['Q_Value'])
 
 
-def play(q_file: str, visual: bool, step: bool) -> int:
-    try:
-        load_Q(q_file)
-    except KeyError:
-        print("Q file format not recognized")
-        exit(1)
+def play(q_model_file: str, visual: bool, step: bool) -> int:
+    # Charger le modèle DQN
+    model = QNetwork(input_size=12, output_size=4)  # 8 = taille de l'état, 4 actions possibles
+    load_model(model, q_model_file)
 
     is_last = False
     game = Game()
@@ -111,8 +119,17 @@ def play(q_file: str, visual: bool, step: bool) -> int:
 
     while not is_last:
         s = snake.get_state()
-        a = action(Q, s, 0.0)
+        
+        # Convertir l'état en tenseur (avec torch)
+        state_tensor = torch.tensor(s, dtype=torch.float32)
 
+        # Prédire les Q-values avec le modèle
+        q_values = model(state_tensor)
+
+        # Choisir l'action avec la meilleure Q-value (exploitation)
+        a = torch.argmax(q_values).item()
+
+        # Détection et rupture de boucle (si nécessaire)
         if detect_loop(snake, a):
             a = break_loop(snake, game.get_world(), a).index
 
@@ -121,6 +138,7 @@ def play(q_file: str, visual: bool, step: bool) -> int:
         except GameOver:
             is_last = True
 
+        # Rendu visuel
         if visual or step:
             game.get_world().render()
 
