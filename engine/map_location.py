@@ -5,33 +5,23 @@ class MapLocation:
     """
     Represents a specific location on the game map.
 
-    This class encapsulates the coordinates (x, y) of a point on the map,
-    whether it's considered a wall, and if there's an entity present at that location.
-    It provides methods to query these properties.
-
-    :ivar __x: The X-coordinate of the location.
-    :vartype __x: int
-    :ivar __y: The Y-coordinate of the location.
-    :vartype __y: int
-    :ivar __is_wall: True if the location is a structural wall, False otherwise.
-    :vartype __is_wall: bool
-    :ivar __entity: The entity present at this location, or None if empty.
-    :vartype __entity: Entity | None
+    Attributes:
+        __x (int): The X-coordinate of the location.
+        __y (int): The Y-coordinate of the location.
+        __is_wall (bool): Indicates whether the location is a wall.
+        __entity (Entity | None): The entity present at the location, if any.
     """
 
     def __init__(self, x: int, y: int, is_wall: bool, entity: Entity | None):
         """
-        Initializes a map location with its coordinates, wall status, and
-        any entity occupying it.
+        Initializes a map location with coordinates and passability status.
 
-        :param x: The X-coordinate of the location.
-        :type x: int
-        :param y: The Y-coordinate of the location.
-        :type y: int
-        :param is_wall: Whether the location is a structural wall.
-        :type is_wall: bool
-        :param entity: The entity at the location, or None if there is no entity.
-        :type entity: Entity | None
+        Args:
+            x (int): The X-coordinate of the location.
+            y (int): The Y-coordinate of the location.
+            is_wall (bool): Whether the location is a wall (not passable).
+            entity (Entity | None): The entity at the location, or None if
+            there is no entity.
         """
         self.__x = x
         self.__y = y
@@ -40,10 +30,10 @@ class MapLocation:
 
     def is_wall(self) -> bool:
         """
-        Checks if the location is a structural wall.
+        Checks if the location is a wall (not passable).
 
-        :return: True if the location is a wall, False otherwise.
-        :rtype: bool
+        Returns:
+            bool: True if the location is a wall, False otherwise.
         """
         return self.__is_wall
 
@@ -51,8 +41,8 @@ class MapLocation:
         """
         Returns the X-coordinate of the location.
 
-        :return: The X-coordinate.
-        :rtype: int
+        Returns:
+            int: The X-coordinate.
         """
         return self.__x
 
@@ -60,8 +50,8 @@ class MapLocation:
         """
         Returns the Y-coordinate of the location.
 
-        :return: The Y-coordinate.
-        :rtype: int
+        Returns:
+            int: The Y-coordinate.
         """
         return self.__y
 
@@ -69,16 +59,17 @@ class MapLocation:
         """
         Returns the entity at the location, if any.
 
-        :return: The entity at the location, or None if there is no entity.
-        :rtype: Entity | None
+        Returns:
+            Entity | None: The entity at the location, or None if there
+            is no entity.
         """
         return self.__entity
 
     def is_empty(self) -> bool:
         """
-        Checks if the location is empty (not a wall and no entity present).
+        Checks if the location is empty.
 
-        :return: True if the location is empty, False otherwise.
-        :rtype: bool
+        Returns:
+            bool: True if the location is empty, False otherwise.
         """
         return not self.__is_wall and self.__entity is None

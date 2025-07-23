@@ -17,9 +17,9 @@ def play_mode():
     snake = Snake(world)
 
     world.spawn_entity(snake)
-    world.spawn_entity(Apple(AppleType.GREEN))
-    world.spawn_entity(Apple(AppleType.GREEN))
-    world.spawn_entity(Apple(AppleType.RED))
+    world.spawn_entity(Apple(world, AppleType.GREEN))
+    world.spawn_entity(Apple(world, AppleType.GREEN))
+    world.spawn_entity(Apple(world, AppleType.RED))
 
     while True:
         world.render()
@@ -35,13 +35,13 @@ def play_mode():
 
         try:
             if key == 'w':
-                snake.move(Direction.UP)
+                snake.move(Direction.NORTH)
             elif key == 's':
-                snake.move(Direction.DOWN)
+                snake.move(Direction.SOUTH)
             elif key == 'a':
-                snake.move(Direction.LEFT)
+                snake.move(Direction.WEST)
             elif key == 'd':
-                snake.move(Direction.RIGHT)
+                snake.move(Direction.EAST)
         except GameOver:
             print("Game Over")
             break
