@@ -6,16 +6,16 @@ class Direction(Enum):
     Represents the possible movement directions in the game.
 
     Attributes:
-        NORTH (tuple[int, int]): Moves upward (0, -1).
-        SOUTH (tuple[int, int]): Moves downward (0, 1).
-        EAST (tuple[int, int]): Moves right (1, 0).
-        WEST (tuple[int, int]): Moves left (-1, 0).
+        UP (tuple[int, int]): Moves upward (0, -1).
+        DOWN (tuple[int, int]): Moves downward (0, 1).
+        LEFT (tuple[int, int]): Moves right (1, 0).
+        RIGHT (tuple[int, int]): Moves left (-1, 0).
     """
 
-    NORTH = (0, -1)
-    SOUTH = (0, 1)
-    EAST = (1, 0)
-    WEST = (-1, 0)
+    UP = (0, -1)
+    DOWN = (0, 1)
+    RIGHT = (1, 0)
+    LEFT = (-1, 0)
 
     def opposite(self) -> "Direction":
         """
@@ -24,14 +24,14 @@ class Direction(Enum):
         Returns:
             Direction: The opposite movement direction.
         """
-        if self == Direction.NORTH:
-            return Direction.SOUTH
-        elif self == Direction.SOUTH:
-            return Direction.NORTH
-        elif self == Direction.EAST:
-            return Direction.WEST
+        if self == Direction.UP:
+            return Direction.DOWN
+        elif self == Direction.DOWN:
+            return Direction.UP
+        elif self == Direction.LEFT:
+            return Direction.RIGHT
         else:
-            return Direction.EAST
+            return Direction.LEFT
 
     @property
     def index(self):

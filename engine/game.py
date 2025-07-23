@@ -35,9 +35,9 @@ class Game:
         self.__snake = Snake(self.__world)
 
         self.__world.spawn_entity(self.__snake)
-        self.__world.spawn_entity(Apple(self.__world, AppleType.GREEN))
-        self.__world.spawn_entity(Apple(self.__world, AppleType.GREEN))
-        self.__world.spawn_entity(Apple(self.__world, AppleType.RED))
+        self.__world.spawn_entity(Apple(AppleType.GREEN))
+        self.__world.spawn_entity(Apple(AppleType.GREEN))
+        self.__world.spawn_entity(Apple(AppleType.RED))
 
     def get_snake(self) -> Snake:
         """
