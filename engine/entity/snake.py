@@ -111,12 +111,12 @@ class Snake(Entity):
             self.__is_dead = True
             raise GameOver("End game")
 
-        if isinstance(info.get_entity(), Apple):
-            reward = self.eat(info.get_entity())
-
         self.set_x(new_x)
         self.set_y(new_y)
         self.__last_direction = direction
+
+        if isinstance(info.get_entity(), Apple):
+            reward = self.eat(info.get_entity())
 
         # Move the body segments following the head
         self.__body.appendleft((self.get_x() - x, self.get_y() - y))
