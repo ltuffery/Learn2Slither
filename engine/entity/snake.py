@@ -121,7 +121,7 @@ class Snake(Entity):
         # Move the body segments following the head
         self.__body.appendleft((self.get_x() - x, self.get_y() - y))
         self.__body.pop()
-        
+
         reward += settings.SIZE_REWARD * self.get_size()
 
         return reward
