@@ -1,16 +1,24 @@
-import csv
+import torch
 import time
 import random
 from engine.direction import Direction
 from engine.game import Game
 from engine.exception.gameover import GameOver
-from ai.utils import action
+from ai.utils import QNetwork
 
 
-Q = {}
 past_configs = set()
 loop_threshold = 15
 loop_counter = 0
+
+
+def load_model(model, path):
+    try:
+        model.load_state_dict(torch.load(path))
+        model.eval()
+    except Exception as e:
+        print(f"Erreur lors du chargement du modèle : {e}")
+        exit(1)
 
 
 def serialize_snake_state(snake, action):
@@ -83,23 +91,9 @@ def break_loop(snake, world, current_direction):
     return list(Direction)[current_direction].opposite()
 
 
-def load_Q(f):
-    with open(f, "r") as file:
-        data = csv.DictReader(file)
-
-        for row in data:
-            state = eval(row['State'])
-            a = Direction[row['Action']].index
-
-            Q[(state, a)] = float(row['Q_Value'])
-
-
-def play(q_file: str, visual: bool, step: bool) -> int:
-    try:
-        load_Q(q_file)
-    except KeyError:
-        print("Q file format not recognized")
-        exit(1)
+def play(q_model_file: str, visual: bool, step: bool) -> int:
+    model = QNetwork(input_size=12, output_size=4)
+    load_model(model, q_model_file)
 
     is_last = False
     game = Game()
@@ -111,7 +105,9 @@ def play(q_file: str, visual: bool, step: bool) -> int:
 
     while not is_last:
         s = snake.get_state()
-        a = action(Q, s, 0.0)
+        state_tensor = torch.tensor(s, dtype=torch.float32)
+        q_values = model(state_tensor)
+        a = torch.argmax(q_values).item()
 
         if detect_loop(snake, a):
             a = break_loop(snake, game.get_world(), a).index
