@@ -35,7 +35,7 @@ class Snake(Entity):
         """
         super().__init__()
 
-        self.__body: deque[tuple[int, int]] = deque()
+        self.__body: deque[tuple[int, int]] = deque(maxlen=35)
         self.__world: World = world
         self.__last_direction: Direction = random.choice(list(Direction))
         self.__is_dead: bool = False
@@ -146,7 +146,9 @@ class Snake(Entity):
                 last_body = self.get_position()
 
             # Grow the snake by adding a new body segment
-            self.__body.append((last_body[0] + x, last_body[1] + y))
+            t = (last_body[0] + x, last_body[1] + y)
+
+            self.__body.append(t)
         else:
             if not self.__body:
                 raise GameOver("End game")
@@ -163,7 +165,7 @@ class Snake(Entity):
         if r > 0 and self.get_size() % 5:
             return r + 5
 
-        return apple.get_reward()
+        return r
 
     def get_state_at(self, x: int, y: int) -> str | None:
         """

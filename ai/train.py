@@ -1,36 +1,39 @@
+import torch
+import torch.optim as optim
+import torch.multiprocessing as mp
+from collections import deque
+import random
+import time
+
 from engine.game import Game
 from engine.direction import Direction
 import engine.settings as settings
 from engine.exception.gameover import GameOver
 from ai.utils import QNetwork
-import torch
-import torch.optim as optim
-import random
 
 
-class ReplayBuffer:
-    def __init__(self, capacity):
-        self.buffer = []
-        self.capacity = capacity
-        self.position = 0
-
-    def push(self, state, action, reward, next_state, done):
-        if len(self.buffer) < self.capacity:
-            self.buffer.append(None)
-        self.buffer[self.position] = (state, action, reward, next_state, done)
-        self.position = (self.position + 1) % self.capacity
-
-    def sample(self, batch_size):
-        return random.sample(self.buffer, batch_size)
-
-    def __len__(self):
-        return len(self.buffer)
-
-
-# Hyperparamètres
 BATCH_SIZE = 32
 TARGET_UPDATE_FREQUENCY = 10
 LEARNING_RATE = 1e-3
+NUM_PROCESSES = 12  # nombre de processus à utiliser
+
+
+class SharedReplayBuffer:
+    def __init__(self, capacity, lock):
+        self.buffer = deque(maxlen=capacity)
+        self.lock = lock
+
+    def push(self, state, action, reward, next_state, done):
+        with self.lock:
+            self.buffer.append((state, action, reward, next_state, done))
+
+    def sample(self, batch_size):
+        with self.lock:
+            return random.sample(self.buffer, batch_size)
+
+    def __len__(self):
+        with self.lock:
+            return len(self.buffer)
 
 
 def train_dqn(model, target_model, replay_buffer, optimizer):
@@ -47,7 +50,6 @@ def train_dqn(model, target_model, replay_buffer, optimizer):
     dones = torch.tensor(batch[4], dtype=torch.uint8)
 
     current_q_values = model(states).gather(1, actions.unsqueeze(1)).squeeze(1)
-
     next_q_values = target_model(next_states).max(1)[0]
     target_q_values = rewards + (settings.GAMMA * next_q_values * (1 - dones))
 
@@ -58,17 +60,7 @@ def train_dqn(model, target_model, replay_buffer, optimizer):
     optimizer.step()
 
 
-# Exploration rate
-EPSILON = settings.EPSILON
-
-
 def progress_bar(i: int) -> None:
-    """
-    Displays a progress bar in the console during training.
-
-    Args:
-        i (int): The current episode number.
-    """
     progress_blocks = 20
     progress_ratio = i / settings.EPISODES
     filled_blocks = int(progress_ratio * progress_blocks)
@@ -80,33 +72,26 @@ def progress_bar(i: int) -> None:
         print("")
 
 
-def train(filename: str) -> None:
-    global EPSILON
+def worker(process_id, model, target_model, replay_buffer, lock):
+    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
+    EPSILON = settings.EPSILON
 
     env = Game()
-    all_action = []
-
     input_size = len(env.get_snake().get_state())
-    output_size = len(Direction)
-    model = QNetwork(input_size, output_size)
-    target_model = QNetwork(input_size, output_size)
-    target_model.load_state_dict(model.state_dict())
-    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
-    replay_buffer = ReplayBuffer(capacity=10000)
 
-    for i in range(settings.EPISODES):
+    for i in range(settings.EPISODES // NUM_PROCESSES):
         is_last = False
         env.start()
         snake = env.get_snake()
         s = snake.get_state()
-        all_action.append([])
 
         while not is_last:
             if random.random() < EPSILON:
-                a = random.randint(0, 3)  # Exploration
+                a = random.randint(0, 3)
             else:
-                q_values = model(torch.tensor(s, dtype=torch.float32))
-                a = torch.argmax(q_values).item()  # Exploitation
+                with torch.no_grad():
+                    q_values = model(torch.tensor(s, dtype=torch.float32))
+                    a = torch.argmax(q_values).item()
 
             try:
                 r = snake.move(list(Direction)[a])
@@ -118,9 +103,7 @@ def train(filename: str) -> None:
             done = is_last
 
             replay_buffer.push(s, a, r, s_next, done)
-
             train_dqn(model, target_model, replay_buffer, optimizer)
-
             s = s_next
 
         if i % TARGET_UPDATE_FREQUENCY == 0:
@@ -129,12 +112,36 @@ def train(filename: str) -> None:
         EPSILON *= settings.EPSILON_DECAY
         EPSILON = max(EPSILON, settings.EPSILON_MIN)
 
-        progress_bar(i + 1)
-
-    torch.save(model.state_dict(), "dqn_model.pth")
-
-    print("Entraînement terminé !")
+        if process_id == 0:
+            progress_bar(i + 1)
 
 
 if __name__ == "__main__":
-    train("train")
+    mp.set_start_method("spawn")  # 'spawn' est recommandé pour compatibilité
+
+    env = Game()
+    input_size = len(env.get_snake().get_state())
+    output_size = len(Direction)
+
+    model = QNetwork(input_size, output_size)
+    model.share_memory()
+
+    target_model = QNetwork(input_size, output_size)
+    target_model.load_state_dict(model.state_dict())
+    target_model.share_memory()
+
+    manager = mp.Manager()
+    lock = manager.Lock()
+    replay_buffer = SharedReplayBuffer(capacity=10000, lock=lock)
+
+    processes = []
+    for pid in range(NUM_PROCESSES):
+        p = mp.Process(target=worker, args=(pid, model, target_model, replay_buffer, lock))
+        p.start()
+        processes.append(p)
+
+    for p in processes:
+        p.join()
+
+    torch.save(model.state_dict(), "dqn_model.pth")
+    print("\nEntraînement multiprocess terminé.")
