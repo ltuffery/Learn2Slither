@@ -72,7 +72,7 @@ def create_replay(filename: str):
         json.dump(replay_storage, f)
 
 
-def play_replay(replay_file: str, ep: int = -1, step: bool = False):
+def play_replay(replay_file: str, ep: int = 0, step: bool = False) -> None:
     """
     Loads and replays the recorded gameplay from the JSON file.
 
@@ -81,7 +81,7 @@ def play_replay(replay_file: str, ep: int = -1, step: bool = False):
     with open(replay_file, "r") as f:
         all_replay = json.load(f)
 
-    if ep - 1 >= len(all_replay):
+    if ep > len(all_replay):
         print("Episode {} out of {}".format(ep, len(all_replay)))
         return
 
@@ -92,14 +92,21 @@ def play_replay(replay_file: str, ep: int = -1, step: bool = False):
         for replay in episode:
             game = Game()
 
-            game.set_snake(replay["head"], replay["body"])
+            body = [tuple(b) for b in replay["body"]]
+
+            game.set_snake(replay["head"], body)
             game.set_apples(replay["apples"])
 
-            title = f"Episode {str(i)}"
+            game.get_snake().set_last_direction(Direction[replay["direction"]])
+
+            title = f"Episode {str(ep == 0 if i else ep)}"
 
             game.get_world().render(title)
 
             if step:
-                input("Press Enter to continue...")
+                inp = input("Press Enter to continue (q to quit)...")
+
+                if inp.lower() == "q":
+                    return
             else:
                 time.sleep(0.3)

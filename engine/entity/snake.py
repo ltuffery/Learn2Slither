@@ -200,7 +200,7 @@ class Snake(Entity):
 
         return None
 
-    def see(self) -> list[list[str]]:
+    def see(self) -> list[list[str | None]]:
         """
         Returns a 2D grid representation of the world from the snake's
         perspective.
@@ -324,10 +324,34 @@ class Snake(Entity):
         return f"\033[33m{settings.SNAKE_HEAD_CHAR}\033[0m"
 
     def get_last_direction(self) -> Direction:
+        """
+        Returns the last direction of the snake.
+
+        Returns:
+            Direction: The last direction of the snake.
+        """
         return self.__last_direction
 
     def is_dead(self) -> bool:
+        """
+        Returns if the snake is dead.
+
+        Returns:
+            bool: True if the snake is dead else False.
+        """
         return self.__is_dead
+
+    def set_last_direction(self, direction: Direction) -> None:
+        """
+        Sets the last direction of the snake.
+
+        Args:
+            direction: The direction of the snake.
+
+        Returns:
+            None
+        """
+        self.__last_direction = direction
 
     def render(self) -> list[tuple[str, int, int]]:
         """

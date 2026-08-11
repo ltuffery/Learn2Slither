@@ -170,7 +170,7 @@ class World:
         """
         self.__entities.remove(entity)
 
-    def render(self, title: str = None):
+    def render(self, title: str | None = None):
         """
         Renders the current state of the world to the terminal.
         """
