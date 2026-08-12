@@ -78,8 +78,6 @@ if __name__ == "__main__":
                                          help="Train new AI and save progress")
     train_parser.add_argument("filename",
                               help="Path to save training results")
-    train_parser.add_argument("--visual", action="store_true",
-                              help="Enable visual display")
 
     # Command: play
     train_parser = subparsers.add_parser("play", help="Play a game")

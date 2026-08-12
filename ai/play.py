@@ -1,6 +1,7 @@
 import csv
 import time
 import random
+import engine.settings as settings
 from engine.direction import Direction
 from engine.game import Game
 from engine.exception.gameover import GameOver
@@ -125,7 +126,7 @@ def play(q_file: str, visual: bool, step: bool) -> int:
             game.get_world().render()
 
             if not step:
-                time.sleep(0.3)
+                time.sleep(settings.SPEED)
             elif not is_last:
                 input("Press enter to continue...")
 

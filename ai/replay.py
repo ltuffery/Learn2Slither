@@ -2,6 +2,7 @@ from engine.game import Game
 from engine.entity.apple import Apple
 from engine.entity.snake import Snake
 from engine.direction import Direction
+import engine.settings as settings
 import json
 import time
 import os
@@ -109,4 +110,4 @@ def play_replay(replay_file: str, ep: int = 0, step: bool = False) -> None:
                 if inp.lower() == "q":
                     return
             else:
-                time.sleep(0.3)
+                time.sleep(settings.SPEED)
