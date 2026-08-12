@@ -5,11 +5,13 @@ import ai.play as play
 import ai.replay as replay
 import ai.train as train
 import numpy as np
+import pygame
 from engine.world import World
 from engine.direction import Direction
 from engine.exception.gameover import GameOver
 from engine.entity.snake import Snake
 from engine.entity.apple import Apple, AppleType
+from engine.renderer import PygameRenderer
 
 
 def play_mode():
@@ -24,27 +26,34 @@ def play_mode():
     while True:
         world.render()
 
-        try:
-            key = input("Move (W/A/S/D) : ").lower()
-        except EOFError:
-            continue
-
-        if key == 'q':
-            print('Quitting the program')
-            break
-
-        try:
-            if key == 'w':
-                snake.move(Direction.UP)
-            elif key == 's':
-                snake.move(Direction.DOWN)
-            elif key == 'a':
-                snake.move(Direction.LEFT)
-            elif key == 'd':
-                snake.move(Direction.RIGHT)
-        except GameOver:
-            print("Game Over")
-            break
+        moved = False
+        while not moved:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    PygameRenderer.quit()
+                    return
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        PygameRenderer.quit()
+                        print('Quitting the program')
+                        return
+                    try:
+                        if event.key == pygame.K_w:
+                            snake.move(Direction.UP)
+                            moved = True
+                        elif event.key == pygame.K_s:
+                            snake.move(Direction.DOWN)
+                            moved = True
+                        elif event.key == pygame.K_a:
+                            snake.move(Direction.LEFT)
+                            moved = True
+                        elif event.key == pygame.K_d:
+                            snake.move(Direction.RIGHT)
+                            moved = True
+                    except GameOver:
+                        print("Game Over")
+                        PygameRenderer.quit()
+                        return
 
 
 if __name__ == "__main__":

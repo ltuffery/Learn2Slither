@@ -2,10 +2,12 @@ from engine.game import Game
 from engine.entity.apple import Apple
 from engine.entity.snake import Snake
 from engine.direction import Direction
+from engine.renderer import PygameRenderer
 import engine.settings as settings
 import json
 import time
 import os
+import pygame
 
 # Global storage for recorded gameplay
 replay_storage = []
@@ -105,9 +107,17 @@ def play_replay(replay_file: str, ep: int = 0, step: bool = False) -> None:
             game.get_world().render(title)
 
             if step:
-                inp = input("Press Enter to continue (q to quit)...")
-
-                if inp.lower() == "q":
-                    return
+                waiting = True
+                while waiting:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            PygameRenderer.quit()
+                            return
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_q:
+                                PygameRenderer.quit()
+                                return
+                            waiting = False
             else:
+                pygame.event.pump()
                 time.sleep(settings.SPEED)

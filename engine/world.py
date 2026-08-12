@@ -1,7 +1,5 @@
 from engine.map_location import MapLocation
 from engine.entity.entity import Entity
-import sys
-import copy
 import random
 import engine.settings as settings
 
@@ -172,32 +170,31 @@ class World:
 
     def render(self, title: str | None = None):
         """
-        Renders the current state of the world to the terminal.
+        Renders the game world via pygame and the snake's vision in the
+        terminal.
         """
+        import sys
         from engine.entity.snake import Snake
+        from engine.renderer import PygameRenderer
 
-        sys.stdout.write("\033[H")  # Moves cursor to the top-left
-        sys.stdout.write("\033[J")  # Clears the terminal
-
-        world = copy.deepcopy(self.__world)
-
-        for entity in self.__entities:
-            for position in entity.render():
-                world[position[2]][position[1]] = position[0]
+        renderer = PygameRenderer.get_instance()
+        renderer.render(self, title)
 
         snake = [e for e in self.__entities if isinstance(e, Snake)][0]
 
+        sys.stdout.write("\033[H")
+        sys.stdout.write("\033[J")
+
         if title is not None:
-            print(title + "\n\n")
+            print(title + "\n")
+
+        print(snake.get_last_direction().name)
 
         def str_see(it):
             return ' ' if it is None else it
 
-        print(snake.get_last_direction().name)
-        for i in range(len(world)):
-            snake_see = "".join(
-                str_see(item) for item in snake.see()[i]
-            )
-            print("".join(world[i]) + "   " + snake_see)
+        vision = snake.see()
+        for i in range(len(vision)):
+            print("".join(str_see(item) for item in vision[i]))
 
         sys.stdout.flush()

@@ -1,10 +1,12 @@
 import csv
 import time
 import random
+import pygame
 import engine.settings as settings
 from engine.direction import Direction
 from engine.game import Game
 from engine.exception.gameover import GameOver
+from engine.renderer import PygameRenderer
 from ai.utils import action
 
 
@@ -126,8 +128,16 @@ def play(q_file: str, visual: bool, step: bool) -> int:
             game.get_world().render()
 
             if not step:
+                pygame.event.pump()
                 time.sleep(settings.SPEED)
             elif not is_last:
-                input("Press enter to continue...")
+                waiting = True
+                while waiting:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            PygameRenderer.quit()
+                            return snake.get_size()
+                        if event.type == pygame.KEYDOWN:
+                            waiting = False
 
     return snake.get_size()
