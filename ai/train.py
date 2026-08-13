@@ -106,10 +106,10 @@ def train(filename: str) -> None:
             EPSILON *= settings.EPSILON_DECAY
             EPSILON = max(EPSILON, settings.EPSILON_MIN)
 
-    replay.create_replay("train_replay")
+        replay.create_replay("train_replay")
 
-    writer = csv.writer(f)
-    writer.writerow(["State", "Action", "Q_Value"])
+        writer = csv.writer(f)
+        writer.writerow(["State", "Action", "Q_Value"])
 
     for (state, a), q_value in Q.items():
         writer.writerow([state, list(Direction)[a].name, q_value])
