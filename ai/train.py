@@ -1,3 +1,5 @@
+import os
+
 from engine.game import Game
 from engine.direction import Direction
 import csv
@@ -31,6 +33,16 @@ def progress_bar(i: int) -> None:
         print("")
 
 
+def load_Q(file):
+    data = csv.DictReader(file)
+
+    for row in data:
+        state = eval(row['State'])
+        a = Direction[row['Action']].index
+
+        Q[(state, a)] = float(row['Q_Value'])
+
+
 def train(filename: str) -> None:
     """
     Trains the snake agent using Q-learning.
@@ -43,60 +55,64 @@ def train(filename: str) -> None:
 
     env = Game()
     all_action: list[list] = list()
+    filepath = f"data/{filename}.csv"
+
+    os.makedirs("data", exist_ok=True)
+
+    if not os.path.exists(filepath):
+        with open(filepath, "w", newline="") as f:
+            pass
+    else:
+        with open(filepath, "r", newline="") as f:
+            load_Q(f)
 
     # Create rewards log file
-    with (open("data/sizes.csv", "w", newline="") as file):
-        with open(f"data/{filename}.csv", "w", newline="") as f:
-            writer = csv.writer(file)
-            writer.writerow(["Total_Size"])
+    with open(f"data/{filename}.csv", "w+", newline="") as f:
+        for i in range(settings.EPISODES):
+            is_last = False
+            env.start()
+            snake = env.get_snake()
+            s = snake.get_state()
+            all_action.append(list())
+            replay.reset_replay()
 
-            for i in range(settings.EPISODES):
-                is_last = False
-                env.start()
-                snake = env.get_snake()
-                s = snake.get_state()
-                all_action.append(list())
-                replay.reset_replay()
+            while not is_last:
+                a = action(Q, s, EPSILON)
+                try:
+                    r = snake.move(list(Direction)[a])
+                except GameOver:
+                    is_last = True
+                    r = settings.GAMEOVER_REWARD  # Penalty for dying
 
-                while not is_last:
-                    a = action(Q, s, EPSILON)
-                    try:
-                        r = snake.move(list(Direction)[a])
-                    except GameOver:
-                        is_last = True
-                        r = settings.GAMEOVER_REWARD  # Penalty for dying
+                replay.save_game_state(env, list(Direction)[a])
+                s_next = snake.get_state()
 
-                    replay.save_game_state(env, list(Direction)[a])
-                    s_next = snake.get_state()
+                # Q-learning update rule
+                next_action = max(
+                    range(4),
+                    key=lambda a: get_Q(Q, s_next, a)
+                )
+                next_q = get_Q(Q, s_next, next_action)
+                invAlpha = 1 - settings.ALPHA
+                q = get_Q(Q, s, a)
+                tmp = (r + settings.GAMMA * next_q)
+                Q[(tuple(s), a)] = invAlpha * q + settings.ALPHA * tmp
 
-                    # Q-learning update rule
-                    next_action = max(
-                        range(4),
-                        key=lambda a: get_Q(Q, s_next, a)
-                    )
-                    next_q = get_Q(Q, s_next, next_action)
-                    invAlpha = 1 - settings.ALPHA
-                    q = get_Q(Q, s, a)
-                    tmp = (r + settings.GAMMA * next_q)
-                    Q[(tuple(s), a)] = invAlpha * q + settings.ALPHA * tmp
+                s = s_next
+                all_action[i].append(tuple(s))
 
-                    s = s_next
-                    all_action[i].append(tuple(s))
+            progress_bar(i + 1)
 
-                progress_bar(i + 1)
+            EPSILON *= settings.EPSILON_DECAY
+            EPSILON = max(EPSILON, settings.EPSILON_MIN)
 
-                writer.writerow([snake.get_size()])
+    replay.create_replay("train_replay")
 
-                EPSILON *= settings.EPSILON_DECAY
-                EPSILON = max(EPSILON, settings.EPSILON_MIN)
+    writer = csv.writer(f)
+    writer.writerow(["State", "Action", "Q_Value"])
 
-            replay.create_replay("train_replay")
-
-            writer = csv.writer(f)
-            writer.writerow(["State", "Action", "Q_Value"])
-
-            for (state, a), q_value in Q.items():
-                writer.writerow([state, list(Direction)[a].name, q_value])
+    for (state, a), q_value in Q.items():
+        writer.writerow([state, list(Direction)[a].name, q_value])
 
 
 if __name__ == "__main__":
