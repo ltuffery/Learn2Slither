@@ -129,6 +129,10 @@ def play(q_file: str, visual: bool, step: bool) -> int:
 
             if not step:
                 pygame.event.pump()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        PygameRenderer.quit()
+                        return snake.get_size()
                 time.sleep(settings.SPEED)
             elif not is_last:
                 waiting = True

@@ -44,12 +44,8 @@ class PygameRenderer:
         self._grid_w = self._cols * self._cell
         grid_h = self._rows * self._cell
         self._gap = 20
-        panel_w = self._grid_w if settings.SHOW_VISION else 0
 
-        if settings.SHOW_VISION:
-            total_w = self._grid_w + self._gap + panel_w
-        else:
-            total_w = self._grid_w
+        total_w = self._grid_w
         total_h = self._title_h + grid_h
 
         self.screen = pygame.display.set_mode((total_w, total_h))
@@ -123,30 +119,6 @@ class PygameRenderer:
                     else settings.COLOR_RED_APPLE
                 )
                 self._draw_cell(ax, ay, color, 0, grid_offset_y)
-
-        if settings.SHOW_VISION and snake:
-            vision_x = self._grid_w + self._gap
-            vision = snake.see()
-
-            for y in range(len(vision)):
-                for x in range(len(vision[y])):
-                    item = vision[y][x]
-                    color = None
-                    if item == settings.WALL_CHAR:
-                        color = settings.COLOR_WALL
-                    elif item == settings.SNAKE_HEAD_CHAR:
-                        color = settings.COLOR_SNAKE_HEAD
-                    elif item == settings.SNAKE_SEGMENT_CHAR:
-                        color = settings.COLOR_SNAKE_BODY
-                    elif item == settings.GREEN_APPLE_CHAR:
-                        color = settings.COLOR_GREEN_APPLE
-                    elif item == settings.RED_APPLE_CHAR:
-                        color = settings.COLOR_RED_APPLE
-
-                    if color is not None:
-                        self._draw_cell(
-                            x, y, color, vision_x, grid_offset_y
-                        )
 
         pygame.display.flip()
 
