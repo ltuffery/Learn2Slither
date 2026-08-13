@@ -84,12 +84,12 @@ def play_replay(replay_file: str, ep: int = 0, step: bool = False) -> None:
     with open(replay_file, "r") as f:
         all_replay = json.load(f)
 
-    if ep > len(all_replay):
+    if ep - 1 > len(all_replay):
         print("Episode {} out of {}".format(ep, len(all_replay)))
         return
 
     if ep > 0:
-        all_replay = [all_replay[ep - 1]]
+        all_replay = [all_replay[ep - 2]]
 
     for i, episode in enumerate(all_replay):
         for replay in episode:
@@ -120,4 +120,14 @@ def play_replay(replay_file: str, ep: int = 0, step: bool = False) -> None:
                             waiting = False
             else:
                 pygame.event.pump()
+
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        PygameRenderer.quit()
+                        return
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_q:
+                            PygameRenderer.quit()
+                            return
+
                 time.sleep(settings.SPEED)

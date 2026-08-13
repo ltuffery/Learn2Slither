@@ -115,12 +115,12 @@ class Snake(Entity):
         self.set_y(new_y)
         self.__last_direction = direction
 
-        if isinstance(info.get_entity(), Apple):
-            reward = self.eat(info.get_entity())
-
         # Move the body segments following the head
         self.__body.appendleft((self.get_x() - x, self.get_y() - y))
         self.__body.pop()
+
+        if isinstance(info.get_entity(), Apple):
+            reward = self.eat(info.get_entity())
 
         return reward
 

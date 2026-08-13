@@ -10,7 +10,6 @@ GREEN_APPLE_CHAR = "@"
 WALL_CHAR = "*"
 SNAKE_HEAD_CHAR = "#"
 SNAKE_SEGMENT_CHAR = "o"
-SPEED = 0.2
 
 #  Pygame Display
 CELL_SIZE = 30
@@ -34,3 +33,4 @@ EPSILON_MIN = 0.01
 # World
 HEIGHT = 10
 WIDTH = 10
+SPEED = 0.2

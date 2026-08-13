@@ -133,6 +133,10 @@ def play(q_file: str, visual: bool, step: bool) -> int:
                     if event.type == pygame.QUIT:
                         PygameRenderer.quit()
                         return snake.get_size()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_q:
+                            PygameRenderer.quit()
+                            return snake.get_size()
                 time.sleep(settings.SPEED)
             elif not is_last:
                 waiting = True
