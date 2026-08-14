@@ -111,8 +111,8 @@ def train(filename: str) -> None:
         writer = csv.writer(f)
         writer.writerow(["State", "Action", "Q_Value"])
 
-    for (state, a), q_value in Q.items():
-        writer.writerow([state, list(Direction)[a].name, q_value])
+        for (state, a), q_value in Q.items():
+            writer.writerow([state, list(Direction)[a].name, q_value])
 
 
 if __name__ == "__main__":
